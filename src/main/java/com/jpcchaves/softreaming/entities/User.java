@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,9 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Profile> profiles;
+
     public User() {
     }
 
@@ -49,6 +53,7 @@ public class User implements UserDetails {
                 String email,
                 String password,
                 Boolean isAdmin,
+                List<Profile> profiles,
                 Set<Role> roles) {
         this.id = id;
         this.name = name;
@@ -56,6 +61,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.isAdmin = isAdmin;
+        this.profiles = profiles;
         this.roles = roles;
     }
 
@@ -151,5 +157,13 @@ public class User implements UserDetails {
 
     public void setAdmin(Boolean admin) {
         isAdmin = admin;
+    }
+
+    public List<Profile> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(List<Profile> profiles) {
+        this.profiles = profiles;
     }
 }

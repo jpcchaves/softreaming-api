@@ -16,14 +16,19 @@ public class Profile {
     @CreatedDate
     private String createdAt;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     public Profile() {
     }
 
-    public Profile(Long id, String name, String imgUrl, String createdAt) {
+    public Profile(Long id, String name, String imgUrl, String createdAt, User user) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
         this.createdAt = createdAt;
+        this.user = user;
     }
 
     public Long getId() {
@@ -56,5 +61,13 @@ public class Profile {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
