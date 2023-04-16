@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
             User user = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail())
                     .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com os dados informados: " + loginDto.getUsernameOrEmail()));
 
-            var userDto = copyPropertiesFromUserToUserDto(user);
+            UserDto userDto = copyPropertiesFromUserToUserDto(user);
 
             JwtAuthResponseDto jwtAuthResponseDto = new JwtAuthResponseDto();
 
@@ -101,8 +101,9 @@ public class AuthServiceImpl implements AuthService {
         if (userRole.isPresent()) {
             roles.add(userRole.get());
             user.setRoles(roles);
-            user.setAdmin(false);
         }
+
+        user.setAdmin(false);
 
         User newUser = userRepository.save(user);
 
@@ -121,6 +122,7 @@ public class AuthServiceImpl implements AuthService {
 
             user.setName(updateUserDto.getName());
             user.setPassword(passwordEncoder.encode(updateUserDto.getPassword()));
+            user.setAdmin(false);
 
             UpdateUserResponseDto response = mapperUtils.parseObject(userRepository.save(user), UpdateUserResponseDto.class);
 
@@ -138,6 +140,8 @@ public class AuthServiceImpl implements AuthService {
         userDto.setEmail(user.getEmail());
         userDto.setName(user.getName());
         userDto.setUsername(user.getUsername());
+        userDto.setRoles(user.getRoles());
+        userDto.setAdmin(user.getAdmin());
         return userDto;
     }
 

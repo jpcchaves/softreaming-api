@@ -9,6 +9,7 @@ public class UserDto {
     private String name;
     private String username;
     private String email;
+    private Boolean isAdmin;
     private Set<Role> roles;
 
     public UserDto() {
@@ -18,11 +19,13 @@ public class UserDto {
                    String name,
                    String username,
                    String email,
+                   Boolean isAdmin,
                    Set<Role> roles) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
+        this.isAdmin = isAdmin;
         this.roles = roles;
     }
 
@@ -56,6 +59,14 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
     }
 
     public Set<Role> getRoles() {
