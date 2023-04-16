@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/softreaming_db?useTimezone=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/softreaming_db
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: admin
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
