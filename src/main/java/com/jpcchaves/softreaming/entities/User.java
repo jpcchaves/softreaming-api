@@ -25,6 +25,7 @@ public class User implements UserDetails {
     private String email;
 
     private String password;
+    private Boolean isAdmin;
 
     // FetchType.EAGER -> means that when user is loaded, his role will be retrieved too
     // CascadeType.ALL -> means that when user is saved, his role will be saved too
@@ -47,12 +48,14 @@ public class User implements UserDetails {
                 String username,
                 String email,
                 String password,
+                Boolean isAdmin,
                 Set<Role> roles) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.isAdmin = isAdmin;
         this.roles = roles;
     }
 
@@ -84,6 +87,10 @@ public class User implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUsername() {
@@ -136,5 +143,13 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
     }
 }
