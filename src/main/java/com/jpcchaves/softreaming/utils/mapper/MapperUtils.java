@@ -1,4 +1,4 @@
-package com.jpcchaves.softreaming.config.utils.mapper;
+package com.jpcchaves.softreaming.utils.mapper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.jpcchaves.softreaming.config.payload.dtos.profile;
+package com.jpcchaves.softreaming.payload.dtos.profile;
 
 import jakarta.validation.constraints.NotBlank;
 

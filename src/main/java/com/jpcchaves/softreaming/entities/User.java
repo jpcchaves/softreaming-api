@@ -1,4 +1,4 @@
-package com.jpcchaves.softreaming.config.entities;
+package com.jpcchaves.softreaming.entities;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
