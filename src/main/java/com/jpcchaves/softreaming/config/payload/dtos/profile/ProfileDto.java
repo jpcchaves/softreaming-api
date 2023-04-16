@@ -1,7 +1,11 @@
 package com.jpcchaves.softreaming.config.payload.dtos.profile;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class ProfileDto {
+    @NotBlank(message = "O nome do perfil é obrigatório!")
     private String name;
+    @NotBlank(message = "A imagem do perfil é obrigatória!")
     private String imgUrl;
 
     public ProfileDto() {
