@@ -3,6 +3,7 @@ package com.jpcchaves.softreaming.payload.dtos.profile;
 import jakarta.validation.constraints.NotBlank;
 
 public class ProfileDto {
+    private Long id;
     @NotBlank(message = "O nome do perfil é obrigatório!")
     private String name;
     @NotBlank(message = "A imagem do perfil é obrigatória!")
@@ -11,9 +12,18 @@ public class ProfileDto {
     public ProfileDto() {
     }
 
-    public ProfileDto(String name, String imgUrl) {
+    public ProfileDto(Long id, String name, String imgUrl) {
+        this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
