@@ -1,13 +1,11 @@
 spring:
   config:
     import: optional:file:.env[.properties]
-  profiles:
-    active: dev
   datasource:
-    url: ${DB_DEV_URL}
+    url: ${DB_PROD_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${DB_DEV_ROOT_USERNAME}
-    password: ${DB_DEV_ROOT_PASSWORD}
+    username: ${DB_PROD_ROOT_USERNAME}
+    password: ${DB_PROD_ROOT_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,4 +15,4 @@ spring:
         show_sql: true
 app:
   jwt-secret: ${JWT_SECRET}
-  jwt-expiration-milliseconds: 604800000
+  jwt-expiration-milliseconds: ${JWT_EXPIRATION_MILLIS}
