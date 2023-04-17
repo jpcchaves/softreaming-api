@@ -2,6 +2,7 @@ package com.jpcchaves.softreaming.services.impl;
 
 import com.jpcchaves.softreaming.entities.Profile;
 import com.jpcchaves.softreaming.entities.User;
+import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.payload.dtos.profile.ProfileDto;
 import com.jpcchaves.softreaming.repositories.ProfileRepository;
 import com.jpcchaves.softreaming.services.ProfileService;
@@ -47,17 +48,37 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileDto getById() {
-        return null;
+    public ProfileDto getById(Long id) {
+        User user = securityContextService.getCurrentLoggedUser();
+
+        Profile profile = repository
+                .findByUser_IdAndId(user.getId(), id)
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um perfil com os dados informados!"));
+
+        ProfileDto profileDto = mapper.parseObject(profile, ProfileDto.class);
+
+        return profileDto;
     }
 
     @Override
     public ProfileDto update(ProfileDto profileDto, Long id) {
-        return null;
+        User user = securityContextService.getCurrentLoggedUser();
+        Profile profile = repository.findByUser_IdAndId(user.getId(), id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um perfil com os dados informados!"));
+
+        profile.setName(profileDto.getName());
+        profile.setImgUrl(profileDto.getImgUrl());
+
+        Profile updatedProfile = repository.save(profile);
+
+        ProfileDto updatedProfileDto = mapper.parseObject(updatedProfile, ProfileDto.class);
+
+        return updatedProfileDto;
     }
 
     @Override
     public void delete(Long id) {
+        getById(id);
 
+        repository.deleteById(id);
     }
 }

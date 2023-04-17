@@ -26,4 +26,20 @@ public class ProfileController {
     public ResponseEntity<List<ProfileDto>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAll());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProfileDto> getById(@PathVariable(value = "id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProfileDto> update(@PathVariable(value = "id") Long id, @RequestBody ProfileDto profileDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.update(profileDto, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+        service.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
