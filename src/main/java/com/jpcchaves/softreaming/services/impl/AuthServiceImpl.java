@@ -123,6 +123,7 @@ public class AuthServiceImpl implements AuthService {
             user.setName(updateUserDto.getName());
             user.setPassword(passwordEncoder.encode(updateUserDto.getPassword()));
             user.setAdmin(false);
+            user.setRoles(user.getRoles());
 
             UpdateUserResponseDto response = mapperUtils.parseObject(userRepository.save(user), UpdateUserResponseDto.class);
 
