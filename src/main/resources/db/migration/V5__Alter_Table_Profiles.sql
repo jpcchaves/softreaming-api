@@ -1,0 +1,1 @@
+alter table profiles add constraint FK410q61iev7klncmpqfuo85ivh foreign key (user_id) references users (id);
