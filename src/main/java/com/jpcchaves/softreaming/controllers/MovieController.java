@@ -30,17 +30,17 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MovieDto> getById(@PathParam("id") Long id){
+    public ResponseEntity<MovieDto> getById(@PathVariable("id") Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieDto> update(@PathParam("id") Long id, @RequestBody MovieDto movieDto){
+    public ResponseEntity<MovieDto> update(@PathVariable("id") Long id, @RequestBody MovieDto movieDto){
         return ResponseEntity.status(HttpStatus.OK).body(service.update(movieDto, id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathParam("id") Long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
