@@ -34,7 +34,7 @@ public class Movie {
 
     @ManyToMany(
             fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.DETACH
     )
     @JoinTable(
             name = "movies_categories",
