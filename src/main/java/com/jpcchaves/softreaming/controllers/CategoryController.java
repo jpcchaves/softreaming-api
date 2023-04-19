@@ -2,6 +2,7 @@ package com.jpcchaves.softreaming.controllers;
 
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
 import com.jpcchaves.softreaming.services.ICrudService;
+import com.jpcchaves.softreaming.services.impl.CategoryServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,9 @@ import java.util.List;
 @RequestMapping("/api/v1/categories")
 public class CategoryController {
 
-   private final ICrudService<CategoryDto> service;
+   private final CategoryServiceImpl service;
 
-    public CategoryController(ICrudService<CategoryDto> service) {
+    public CategoryController(CategoryServiceImpl service) {
         this.service = service;
     }
 
