@@ -6,10 +6,12 @@ import com.jpcchaves.softreaming.payload.dtos.movie.MovieDto;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.services.ICrudService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class MovieServiceImpl implements ICrudService<MovieDto> {
 
     private final MovieRepository repository;

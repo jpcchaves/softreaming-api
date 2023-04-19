@@ -2,15 +2,21 @@ package com.jpcchaves.softreaming.services.impl;
 
 import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
+import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.services.ICrudService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
+import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CategoryServiceImpl implements ICrudService<CategoryDto> {
 
     private final CategoryRepository repository;
