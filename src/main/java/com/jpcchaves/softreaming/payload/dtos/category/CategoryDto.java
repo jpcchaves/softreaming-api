@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.payload.dtos.category;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jpcchaves.softreaming.entities.Movie;
 
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.Set;
 public class CategoryDto {
     private Long id;
     private String category;
+    @JsonIgnore
     private Set<Movie> movies;
 
     public CategoryDto() {
