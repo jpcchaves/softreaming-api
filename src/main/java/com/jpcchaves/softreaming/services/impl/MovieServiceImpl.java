@@ -41,7 +41,7 @@ public class MovieServiceImpl implements ICrudService<MovieDto> {
     @Override
     public MovieDto getById(Long id) {
 
-        Movie movie = movieExists(id).get();
+        Movie movie = getMovie(id).get();
 
         MovieDto movieDto = mapper.parseObject(movie, MovieDto.class);
 
@@ -50,33 +50,35 @@ public class MovieServiceImpl implements ICrudService<MovieDto> {
 
     @Override
     public MovieDto update(MovieDto requestDto, Long id) {
-      Movie movie = movieExists(id).get();
+      Movie movie = getMovie(id).get();
 
-      MovieDto movieDto = convertMovieToDto(movie);
+      Movie updatedMovie = updateMovie(movie, requestDto);
+
+      Movie savedMovie = repository.save(updatedMovie);
+      MovieDto movieDto = mapper.parseObject(savedMovie, MovieDto.class);
 
       return movieDto;
     }
 
+    private Movie updateMovie(Movie movie,
+                              MovieDto requestDto) {
+        movie.setId(movie.getId());
+        movie.setCreatedAt(movie.getCreatedAt());
+        movie.setName(requestDto.getName());
+        movie.setDescription(requestDto.getDescription());
+        movie.setDuration(requestDto.getDuration());
+        movie.setMovieUrl(requestDto.getMovieUrl());
+        movie.setPosterUrl(requestDto.getPosterUrl());
+        return movie;
+    }
+
     @Override
     public void delete(Long id) {
-       movieExists(id);
-       repository.deleteById(id);
+        getMovie(id);
+        repository.deleteById(id);
     }
 
-    private MovieDto convertMovieToDto(Movie movie) {
-        return new MovieDto(
-                movie.getId(),
-                movie.getName(),
-                movie.getDescription(),
-                movie.getDuration(),
-                movie.getReleaseDate(),
-                movie.getMovieUrl(),
-                movie.getPosterUrl(),
-                movie.getCreatedAt()
-        );
-    }
-
-    private Optional<Movie> movieExists(Long id) {
+    private Optional<Movie> getMovie(Long id) {
         return Optional.ofNullable(repository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado")));
