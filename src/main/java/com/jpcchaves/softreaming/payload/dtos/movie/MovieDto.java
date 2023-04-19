@@ -1,12 +1,15 @@
 package com.jpcchaves.softreaming.payload.dtos.movie;
 
-import jakarta.persistence.Column;
-import org.springframework.data.annotation.CreatedDate;
+import com.jpcchaves.softreaming.entities.Category;
+import jakarta.persistence.ManyToMany;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MovieDto {
     private Long id;
+    private Long categoryId;
     private String name;
     private String description;
     private String duration;
@@ -14,19 +17,23 @@ public class MovieDto {
     private String movieUrl;
     private String posterUrl;
     private Date createdAt;
+    private Set<Category> categories = new HashSet<>();
 
     public MovieDto() {
     }
 
     public MovieDto(Long id,
+                    Long categoryId,
                     String name,
                     String description,
                     String duration,
                     String releaseDate,
                     String movieUrl,
                     String posterUrl,
-                    Date createdAt) {
+                    Date createdAt,
+                    Set<Category> categories) {
         this.id = id;
+        this.categoryId = categoryId;
         this.name = name;
         this.description = description;
         this.duration = duration;
@@ -34,6 +41,7 @@ public class MovieDto {
         this.movieUrl = movieUrl;
         this.posterUrl = posterUrl;
         this.createdAt = createdAt;
+        this.categories = categories;
     }
 
     public Long getId() {
@@ -98,5 +106,21 @@ public class MovieDto {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }

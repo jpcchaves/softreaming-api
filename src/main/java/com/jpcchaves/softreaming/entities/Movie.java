@@ -1,13 +1,18 @@
 package com.jpcchaves.softreaming.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "movies")
+@EntityListeners(AuditingEntityListener.class)
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +41,7 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
     )
-    private List<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
     public Movie() {
     }
@@ -49,7 +54,7 @@ public class Movie {
                  String movieUrl,
                  String posterUrl,
                  Date createdAt,
-                 List<Category> categories) {
+                 Set<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -125,11 +130,11 @@ public class Movie {
         this.createdAt = createdAt;
     }
 
-    public List<Category> getCategories() {
+    public Set<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
 }

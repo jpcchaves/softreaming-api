@@ -1,8 +1,10 @@
 package com.jpcchaves.softreaming.services.impl;
 
+import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieDto;
+import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.services.ICrudService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
@@ -15,17 +17,25 @@ import java.util.Optional;
 public class MovieServiceImpl implements ICrudService<MovieDto> {
 
     private final MovieRepository repository;
+    private final CategoryRepository categoryRepository;
     private final MapperUtils mapper;
 
     public MovieServiceImpl(MovieRepository repository,
+                            CategoryRepository categoryRepository,
                             MapperUtils mapper) {
         this.repository = repository;
+        this.categoryRepository = categoryRepository;
         this.mapper = mapper;
     }
 
     @Override
     public MovieDto create(MovieDto requestDto) {
+        Category category = categoryRepository
+                .findById(requestDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma categoria com o ID informado: " + requestDto.getCategoryId()));
+
         Movie movie = mapper.parseObject(requestDto, Movie.class);
+        movie.getCategories().add(category);
         Movie savedMovie = repository.save(movie);
 
         MovieDto movieDto = mapper.parseObject(savedMovie, MovieDto.class);
