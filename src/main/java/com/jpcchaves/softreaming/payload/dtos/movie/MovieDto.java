@@ -1,15 +1,15 @@
 package com.jpcchaves.softreaming.payload.dtos.movie;
 
 import com.jpcchaves.softreaming.entities.Category;
-import jakarta.persistence.ManyToMany;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class MovieDto {
     private Long id;
-    private Long categoryId;
+    private List<Long> categoriesIds;
     private String name;
     private String description;
     private String duration;
@@ -23,7 +23,7 @@ public class MovieDto {
     }
 
     public MovieDto(Long id,
-                    Long categoryId,
+                    List<Long> categoriesIds,
                     String name,
                     String description,
                     String duration,
@@ -33,7 +33,7 @@ public class MovieDto {
                     Date createdAt,
                     Set<Category> categories) {
         this.id = id;
-        this.categoryId = categoryId;
+        this.categoriesIds = categoriesIds;
         this.name = name;
         this.description = description;
         this.duration = duration;
@@ -50,6 +50,14 @@ public class MovieDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Long> getCategoriesIds() {
+        return categoriesIds;
+    }
+
+    public void setCategoriesIds(List<Long> categoriesIds) {
+        this.categoriesIds = categoriesIds;
     }
 
     public String getName() {
@@ -114,13 +122,5 @@ public class MovieDto {
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
     }
 }

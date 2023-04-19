@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements ICrudService<MovieDto> {
@@ -30,12 +31,18 @@ public class MovieServiceImpl implements ICrudService<MovieDto> {
 
     @Override
     public MovieDto create(MovieDto requestDto) {
-        Category category = categoryRepository
-                .findById(requestDto.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma categoria com o ID informado: " + requestDto.getCategoryId()));
+        System.out.println(requestDto.getCategories());
+        List<Category> categories = categoryRepository
+                .findAllById(requestDto.getCategoriesIds());
+
 
         Movie movie = mapper.parseObject(requestDto, Movie.class);
-        movie.getCategories().add(category);
+
+        categories
+                .stream()
+                .map(category -> movie.getCategories().add(category))
+                .collect(Collectors.toList());
+
         Movie savedMovie = repository.save(movie);
 
         MovieDto movieDto = mapper.parseObject(savedMovie, MovieDto.class);
@@ -62,14 +69,14 @@ public class MovieServiceImpl implements ICrudService<MovieDto> {
 
     @Override
     public MovieDto update(MovieDto requestDto, Long id) {
-      Movie movie = getMovie(id).get();
+        Movie movie = getMovie(id).get();
 
-      Movie updatedMovie = updateMovie(movie, requestDto);
+        Movie updatedMovie = updateMovie(movie, requestDto);
 
-      Movie savedMovie = repository.save(updatedMovie);
-      MovieDto movieDto = mapper.parseObject(savedMovie, MovieDto.class);
+        Movie savedMovie = repository.save(updatedMovie);
+        MovieDto movieDto = mapper.parseObject(savedMovie, MovieDto.class);
 
-      return movieDto;
+        return movieDto;
     }
 
     private Movie updateMovie(Movie movie,
