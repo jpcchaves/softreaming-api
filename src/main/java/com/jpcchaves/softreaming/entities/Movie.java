@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "movies")
@@ -26,6 +27,17 @@ public class Movie {
     @CreatedDate
     private Date createdAt;
 
+    @ManyToMany(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL
+    )
+    @JoinTable(
+            name = "movies_categories",
+            joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
+    )
+    private List<Category> categories;
+
     public Movie() {
     }
 
@@ -36,7 +48,8 @@ public class Movie {
                  String releaseDate,
                  String movieUrl,
                  String posterUrl,
-                 Date createdAt) {
+                 Date createdAt,
+                 List<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,6 +58,7 @@ public class Movie {
         this.movieUrl = movieUrl;
         this.posterUrl = posterUrl;
         this.createdAt = createdAt;
+        this.categories = categories;
     }
 
     public Long getId() {
@@ -109,5 +123,13 @@ public class Movie {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }
