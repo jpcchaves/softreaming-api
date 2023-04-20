@@ -1,8 +1,8 @@
 package com.jpcchaves.softreaming.controllers;
 
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.services.impl.MovieServiceImpl;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,22 +20,22 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<MovieDto> create(@RequestBody MovieDto movieDto) {
+    public ResponseEntity<MovieResponseDto> create(@RequestBody MovieRequestDto movieDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(movieDto));
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieDto>> getAll() {
+    public ResponseEntity<List<MovieResponseDto>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MovieDto> getById(@PathVariable("id") Long id){
+    public ResponseEntity<MovieResponseDto> getById(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieDto> update(@PathVariable("id") Long id, @RequestBody MovieDto movieDto){
+    public ResponseEntity<MovieResponseDto> update(@PathVariable("id") Long id, @RequestBody MovieRequestDto movieDto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(movieDto, id));
     }
 

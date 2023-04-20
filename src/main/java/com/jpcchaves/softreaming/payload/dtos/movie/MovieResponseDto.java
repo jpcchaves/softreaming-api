@@ -4,12 +4,10 @@ import com.jpcchaves.softreaming.entities.Category;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class MovieDto {
+public class MovieResponseDto {
     private Long id;
-    private List<Long> categoriesIds;
     private String name;
     private String description;
     private String duration;
@@ -19,21 +17,19 @@ public class MovieDto {
     private Date createdAt;
     private Set<Category> categories = new HashSet<>();
 
-    public MovieDto() {
+    public MovieResponseDto() {
     }
 
-    public MovieDto(Long id,
-                    List<Long> categoriesIds,
-                    String name,
-                    String description,
-                    String duration,
-                    String releaseDate,
-                    String movieUrl,
-                    String posterUrl,
-                    Date createdAt,
-                    Set<Category> categories) {
+    public MovieResponseDto(Long id,
+                            String name,
+                            String description,
+                            String duration,
+                            String releaseDate,
+                            String movieUrl,
+                            String posterUrl,
+                            Date createdAt,
+                            Set<Category> categories) {
         this.id = id;
-        this.categoriesIds = categoriesIds;
         this.name = name;
         this.description = description;
         this.duration = duration;
@@ -50,14 +46,6 @@ public class MovieDto {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<Long> getCategoriesIds() {
-        return categoriesIds;
-    }
-
-    public void setCategoriesIds(List<Long> categoriesIds) {
-        this.categoriesIds = categoriesIds;
     }
 
     public String getName() {

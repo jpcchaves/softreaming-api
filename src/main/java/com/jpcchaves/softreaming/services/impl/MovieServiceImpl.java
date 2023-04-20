@@ -3,19 +3,21 @@ package com.jpcchaves.softreaming.services.impl;
 import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.services.ICrudService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
-public class MovieServiceImpl implements ICrudService<MovieDto> {
+public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResponseDto> {
 
     private final MovieRepository repository;
     private final CategoryRepository categoryRepository;
@@ -30,57 +32,59 @@ public class MovieServiceImpl implements ICrudService<MovieDto> {
     }
 
     @Override
-    public MovieDto create(MovieDto requestDto) {
-        System.out.println(requestDto.getCategories());
-        List<Category> categories = categoryRepository
+    public MovieResponseDto create(MovieRequestDto requestDto) {
+        List<Category> categoriesList = categoryRepository
                 .findAllById(requestDto.getCategoriesIds());
 
+        Set<Category> categorySet = new HashSet<>(categoriesList);
 
         Movie movie = mapper.parseObject(requestDto, Movie.class);
-
-        categories
-                .stream()
-                .map(category -> movie.getCategories().add(category))
-                .collect(Collectors.toList());
-
+        movie.setCategories(categorySet);
+        
         Movie savedMovie = repository.save(movie);
 
-        MovieDto movieDto = mapper.parseObject(savedMovie, MovieDto.class);
+        MovieRequestDto movieDto = mapper.parseObject(savedMovie, MovieRequestDto.class);
 
-        return movieDto;
+        MovieResponseDto movieResponseDto = mapper.parseObject(movieDto, MovieResponseDto.class);
+        return movieResponseDto;
     }
 
     @Override
-    public List<MovieDto> getAll() {
+    public List<MovieResponseDto> getAll() {
         List<Movie> movies = repository.findAll();
-        List<MovieDto> movieDtos = mapper.parseListObjects(movies, MovieDto.class);
+        List<MovieResponseDto> movieDtos = mapper.parseListObjects(movies, MovieResponseDto.class);
         return movieDtos;
     }
 
     @Override
-    public MovieDto getById(Long id) {
+    public MovieResponseDto getById(Long id) {
 
         Movie movie = getMovie(id).get();
 
-        MovieDto movieDto = mapper.parseObject(movie, MovieDto.class);
+        MovieResponseDto movieDto = mapper.parseObject(movie, MovieResponseDto.class);
 
         return movieDto;
     }
 
     @Override
-    public MovieDto update(MovieDto requestDto, Long id) {
-        Movie movie = getMovie(id).get();
+    public MovieResponseDto update(MovieRequestDto requestDto, Long id) {
+        List<Category> categories = categoryRepository
+                .findAllById(requestDto.getCategoriesIds());
 
+        Set<Category> newCategories = new HashSet<>(categories);
+
+        Movie movie = getMovie(id).get();
         Movie updatedMovie = updateMovie(movie, requestDto);
+        updatedMovie.setCategories(newCategories);
 
         Movie savedMovie = repository.save(updatedMovie);
-        MovieDto movieDto = mapper.parseObject(savedMovie, MovieDto.class);
+        MovieResponseDto movieDto = mapper.parseObject(savedMovie, MovieResponseDto.class);
 
         return movieDto;
     }
 
     private Movie updateMovie(Movie movie,
-                              MovieDto requestDto) {
+                              MovieRequestDto requestDto) {
         movie.setId(movie.getId());
         movie.setCreatedAt(movie.getCreatedAt());
         movie.setName(requestDto.getName());
@@ -88,6 +92,7 @@ public class MovieServiceImpl implements ICrudService<MovieDto> {
         movie.setDuration(requestDto.getDuration());
         movie.setMovieUrl(requestDto.getMovieUrl());
         movie.setPosterUrl(requestDto.getPosterUrl());
+        movie.setCategories(requestDto.getCategories());
         return movie;
     }
 
