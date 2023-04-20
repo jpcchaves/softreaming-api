@@ -24,4 +24,5 @@ VALUES ('1', 'Ação'),
        ('23', 'Filme policial'),
        ('24', 'Romance'),
        ('25', 'Terror'),
-       ('26', 'Thriller');
+       ('26', 'Thriller'),
+       ('27', 'Crime');

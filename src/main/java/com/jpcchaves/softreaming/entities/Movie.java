@@ -7,7 +7,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,7 +18,7 @@ public class Movie {
     private Long id;
     @Column(nullable = false, unique = true)
     private String name;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
     private String description;
     @Column(nullable = false, unique = true)
     private String duration;
