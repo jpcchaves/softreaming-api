@@ -2,13 +2,12 @@ package com.jpcchaves.softreaming.services.impl;
 
 import com.jpcchaves.softreaming.entities.Profile;
 import com.jpcchaves.softreaming.entities.User;
+import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.payload.dtos.profile.ProfileDto;
 import com.jpcchaves.softreaming.repositories.ProfileRepository;
 import com.jpcchaves.softreaming.services.ProfileService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
-import org.modelmapper.ModelMapper;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,11 +32,14 @@ public class ProfileServiceImpl implements ProfileService {
         Profile profile = mapper.parseObject(profileDto, Profile.class);
         User user = securityContextService.getCurrentLoggedUser();
 
+        verifyProfilesAmount(user.getId());
+
         profile.setUser(user);
 
         Profile savedProfile = repository.save(profile);
         return mapper.parseObject(savedProfile, ProfileDto.class);
     }
+
 
     @Override
     public List<ProfileDto> getAll() {
@@ -80,5 +82,11 @@ public class ProfileServiceImpl implements ProfileService {
         getById(id);
 
         repository.deleteById(id);
+    }
+
+    private void verifyProfilesAmount(Long userId) {
+        if (repository.countAllByUser_Id(userId) >= 4) {
+            throw new BadRequestException("O usuário atingiu o limite máximo de perfis cadastrados!");
+        }
     }
 }
