@@ -2,10 +2,12 @@ package com.jpcchaves.softreaming.services.impl;
 
 import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
+import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.services.ICrudService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,10 +27,15 @@ public class CategoryServiceImpl implements ICrudService<CategoryDto, CategoryDt
 
     @Override
     public CategoryDto create(CategoryDto requestDto) {
-        Category category = mapper.parseObject(requestDto, Category.class);
-        Category savedCategory = repository.save(category);
-        CategoryDto categoryDto = mapper.parseObject(savedCategory, CategoryDto.class);
-        return categoryDto;
+        try {
+            Category category = mapper.parseObject(requestDto, Category.class);
+            Category savedCategory = repository.save(category);
+            CategoryDto categoryDto = mapper.parseObject(savedCategory, CategoryDto.class);
+            return categoryDto;
+        } catch (
+                DataIntegrityViolationException ex) {
+            throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
+        }
     }
 
     @Override
@@ -48,12 +55,17 @@ public class CategoryServiceImpl implements ICrudService<CategoryDto, CategoryDt
 
     @Override
     public CategoryDto update(CategoryDto requestDto, Long id) {
-        Category category = getCategory(id).get();
-        Category updatedCategory = updateCategory(category, requestDto);
+        try {
+            Category category = getCategory(id).get();
+            Category updatedCategory = updateCategory(category, requestDto);
 
-        Category savedCategory = repository.save(updatedCategory);
-        CategoryDto categoryDto = mapper.parseObject(savedCategory, CategoryDto.class);
-        return categoryDto;
+            Category savedCategory = repository.save(updatedCategory);
+            CategoryDto categoryDto = mapper.parseObject(savedCategory, CategoryDto.class);
+
+            return categoryDto;
+        } catch (DataIntegrityViolationException ex) {
+            throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
+        }
     }
 
     @Override
