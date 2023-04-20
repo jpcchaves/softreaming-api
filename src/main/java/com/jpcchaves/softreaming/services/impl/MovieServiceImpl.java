@@ -3,12 +3,14 @@ package com.jpcchaves.softreaming.services.impl;
 import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
+import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.services.ICrudService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -33,20 +35,25 @@ public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResp
 
     @Override
     public MovieResponseDto create(MovieRequestDto requestDto) {
-        List<Category> categoriesList = categoryRepository
-                .findAllById(requestDto.getCategoriesIds());
+        try {
 
-        Set<Category> categorySet = new HashSet<>(categoriesList);
+            List<Category> categoriesList = categoryRepository
+                    .findAllById(requestDto.getCategoriesIds());
 
-        Movie movie = mapper.parseObject(requestDto, Movie.class);
-        movie.setCategories(categorySet);
-        
-        Movie savedMovie = repository.save(movie);
+            Set<Category> categorySet = new HashSet<>(categoriesList);
 
-        MovieRequestDto movieDto = mapper.parseObject(savedMovie, MovieRequestDto.class);
+            Movie movie = mapper.parseObject(requestDto, Movie.class);
+            movie.setCategories(categorySet);
 
-        MovieResponseDto movieResponseDto = mapper.parseObject(movieDto, MovieResponseDto.class);
-        return movieResponseDto;
+            Movie savedMovie = repository.save(movie);
+
+            MovieRequestDto movieDto = mapper.parseObject(savedMovie, MovieRequestDto.class);
+
+            MovieResponseDto movieResponseDto = mapper.parseObject(movieDto, MovieResponseDto.class);
+            return movieResponseDto;
+        } catch (DataIntegrityViolationException ex) {
+            throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
+        }
     }
 
     @Override
