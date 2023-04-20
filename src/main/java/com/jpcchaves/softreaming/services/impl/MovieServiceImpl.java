@@ -75,21 +75,32 @@ public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResp
 
     @Override
     public MovieResponseDto update(MovieRequestDto requestDto, Long id) {
-        List<Category> categories = categoryRepository
-                .findAllById(requestDto.getCategoriesIds());
+        try {
+            List<Category> categories = categoryRepository
+                    .findAllById(requestDto.getCategoriesIds());
 
-        Set<Category> newCategories = new HashSet<>(categories);
+            Set<Category> newCategories = new HashSet<>(categories);
 
-        Movie movie = getMovie(id).get();
-        Movie updatedMovie = updateMovie(movie, requestDto);
-        updatedMovie.setCategories(newCategories);
+            Movie movie = getMovie(id).get();
+            Movie updatedMovie = updateMovie(movie, requestDto);
+            updatedMovie.setCategories(newCategories);
 
-        Movie savedMovie = repository.save(updatedMovie);
-        MovieResponseDto movieDto = mapper.parseObject(savedMovie, MovieResponseDto.class);
+            Movie savedMovie = repository.save(updatedMovie);
+            MovieResponseDto movieDto = mapper.parseObject(savedMovie, MovieResponseDto.class);
 
-        return movieDto;
+            return movieDto;
+        } catch (DataIntegrityViolationException ex) {
+            throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
+        }
     }
 
+
+    @Override
+    public void delete(Long id) {
+        getMovie(id);
+        repository.deleteById(id);
+    }
+    
     private Movie updateMovie(Movie movie,
                               MovieRequestDto requestDto) {
         movie.setId(movie.getId());
@@ -101,12 +112,6 @@ public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResp
         movie.setPosterUrl(requestDto.getPosterUrl());
         movie.setCategories(requestDto.getCategories());
         return movie;
-    }
-
-    @Override
-    public void delete(Long id) {
-        getMovie(id);
-        repository.deleteById(id);
     }
 
     private Optional<Movie> getMovie(Long id) {
