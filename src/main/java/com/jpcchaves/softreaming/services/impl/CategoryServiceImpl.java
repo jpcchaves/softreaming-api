@@ -62,7 +62,7 @@ public class CategoryServiceImpl implements ICrudService<CategoryDto, CategoryDt
             Category savedCategory = repository.save(updatedCategory);
             CategoryDto categoryDto = mapper.parseObject(savedCategory, CategoryDto.class);
 
-            return categoryDto;
+              return categoryDto;
         } catch (DataIntegrityViolationException ex) {
             throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
         }
