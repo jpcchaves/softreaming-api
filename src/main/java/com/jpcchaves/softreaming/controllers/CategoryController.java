@@ -19,7 +19,7 @@ public class CategoryController {
         this.service = service;
     }
 
-    @PreAuthorize("hasRole('ADMIN)")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<CategoryDto> create(@RequestBody CategoryDto categoryDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(categoryDto));
@@ -35,13 +35,13 @@ public class CategoryController {
         return ResponseEntity.ok(service.getById(id));
     }
 
-    @PreAuthorize("hasRole('ADMIN)")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDto> update(@PathVariable("id") Long id, @RequestBody CategoryDto categoryDto) {
         return ResponseEntity.ok(service.update(categoryDto, id));
     }
 
-    @PreAuthorize("hasRole('ADMIN)")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         service.delete(id);

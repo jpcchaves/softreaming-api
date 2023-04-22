@@ -20,7 +20,7 @@ public class MovieController {
         this.service = service;
     }
 
-    @PreAuthorize("hasRole('ADMIN)")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<MovieResponseDto> create(@RequestBody MovieRequestDto movieDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(movieDto));
@@ -36,13 +36,13 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getById(id));
     }
 
-    @PreAuthorize("hasRole('ADMIN)")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<MovieResponseDto> update(@PathVariable("id") Long id, @RequestBody MovieRequestDto movieDto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(movieDto, id));
     }
 
-    @PreAuthorize("hasRole('ADMIN)")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         service.delete(id);
