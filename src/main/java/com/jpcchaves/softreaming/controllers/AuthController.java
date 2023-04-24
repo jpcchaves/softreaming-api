@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +68,7 @@ public class AuthController {
             }
     )
     @PutMapping("/update/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<UpdateUserResponseDto> update(@Valid @RequestBody UpdateUserRequestDto updateUserDto,
                                                         @PathVariable(name = "id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.update(updateUserDto, id));
