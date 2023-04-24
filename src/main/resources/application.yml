@@ -18,3 +18,7 @@ spring:
 app:
   jwt-secret: ${JWT_SECRET}
   jwt-expiration-milliseconds: 604800000
+springdoc:
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
