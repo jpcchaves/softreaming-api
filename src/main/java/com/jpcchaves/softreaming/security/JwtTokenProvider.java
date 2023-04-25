@@ -1,5 +1,6 @@
 package com.jpcchaves.softreaming.security;
 
+import com.jpcchaves.softreaming.entities.User;
 import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -20,17 +21,19 @@ public class JwtTokenProvider {
     private long jwtExpiration;
 
     public String generateToken(Authentication authentication) {
-        String username = authentication.getName();
+        User user = (User) authentication.getPrincipal();
 
         Date creationDate = new Date();
         Date expirationDate = new Date(creationDate.getTime() + jwtExpiration);
 
         return Jwts
                 .builder()
-                .setSubject(username)
+                .setSubject(user.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
                 .signWith(key())
+                .claim("authorities", authentication.getAuthorities())
+                .claim("admin", user.getAdmin())
                 .compact();
     }
 
