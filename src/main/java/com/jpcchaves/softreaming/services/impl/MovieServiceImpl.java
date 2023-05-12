@@ -111,23 +111,22 @@ public class MovieServiceImpl implements MovieService {
         Integer ratingsAmount = movie.getRatingsAmount();
 
         if (ratingsAmount > 0) {
-            Double prevRating = movie.getRating();
-            Double newRating = movieRatingDto.getRating();
-
-            Double rating = (prevRating + newRating) / 2;
+            Double rating = calculateRating(movie.getRating(), movieRatingDto.getRating());
 
             movie.setRating(rating);
         } else {
             movie.setRating(movieRatingDto.getRating());
         }
 
-        // Increase Rating Amount
         movie.setRatingsAmount(movie.getRatingsAmount() + 1);
-
 
         repository.save(movie);
 
         return new ApiMessageResponseDto("Avaliado com sucesso");
+    }
+
+    private Double calculateRating(Double previousRating, Double currentRating) {
+        return (previousRating + currentRating) / 2;
     }
 
     private Movie updateMovie(Movie movie,
