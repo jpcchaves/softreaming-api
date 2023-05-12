@@ -18,18 +18,19 @@ public class Movie {
     private Long id;
     @Column(nullable = false, unique = true)
     private String name;
-    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String duration;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String releaseDate;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String movieUrl;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String posterUrl;
     @CreatedDate
     private Date createdAt;
+    private Double rating = 0.0;
 
     @ManyToMany(
             fetch = FetchType.EAGER,
@@ -54,6 +55,7 @@ public class Movie {
                  String movieUrl,
                  String posterUrl,
                  Date createdAt,
+                 Double rating,
                  Set<Category> categories) {
         this.id = id;
         this.name = name;
@@ -63,6 +65,7 @@ public class Movie {
         this.movieUrl = movieUrl;
         this.posterUrl = posterUrl;
         this.createdAt = createdAt;
+        this.rating = rating;
         this.categories = categories;
     }
 
@@ -136,5 +139,13 @@ public class Movie {
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }

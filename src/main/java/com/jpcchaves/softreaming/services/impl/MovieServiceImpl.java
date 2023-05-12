@@ -44,6 +44,7 @@ public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResp
 
             Movie movie = mapper.parseObject(requestDto, Movie.class);
             movie.setCategories(categorySet);
+            movie.setRating(0.0);
 
             Movie savedMovie = repository.save(movie);
 
@@ -100,7 +101,7 @@ public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResp
         getMovie(id);
         repository.deleteById(id);
     }
-    
+
     private Movie updateMovie(Movie movie,
                               MovieRequestDto requestDto) {
         movie.setId(movie.getId());

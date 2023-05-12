@@ -15,6 +15,7 @@ public class MovieResponseDto {
     private String movieUrl;
     private String posterUrl;
     private Date createdAt;
+    private Double rating = 0.0;
     private Set<Category> categories = new HashSet<>();
 
     public MovieResponseDto() {
@@ -28,6 +29,7 @@ public class MovieResponseDto {
                             String movieUrl,
                             String posterUrl,
                             Date createdAt,
+                            Double rating,
                             Set<Category> categories) {
         this.id = id;
         this.name = name;
@@ -37,6 +39,7 @@ public class MovieResponseDto {
         this.movieUrl = movieUrl;
         this.posterUrl = posterUrl;
         this.createdAt = createdAt;
+        this.rating = rating;
         this.categories = categories;
     }
 
@@ -110,5 +113,13 @@ public class MovieResponseDto {
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }
