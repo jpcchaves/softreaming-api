@@ -1,5 +1,7 @@
 package com.jpcchaves.softreaming.controllers;
 
+import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.services.impl.MovieServiceImpl;
@@ -119,5 +121,10 @@ public class MovieController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PatchMapping("/{id}/rating")
+    public ResponseEntity<ApiMessageResponseDto> updateRating(@PathVariable("id") Long id, @RequestBody MovieRatingDto movieRatingDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateMovieRating(id, movieRatingDto));
     }
 }

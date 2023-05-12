@@ -4,11 +4,13 @@ import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
+import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
-import com.jpcchaves.softreaming.services.ICrudService;
+import com.jpcchaves.softreaming.services.MovieService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResponseDto> {
+public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository repository;
     private final CategoryRepository categoryRepository;
@@ -45,6 +47,7 @@ public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResp
             Movie movie = mapper.parseObject(requestDto, Movie.class);
             movie.setCategories(categorySet);
             movie.setRating(0.0);
+            movie.setRatingsAmount(0);
 
             Movie savedMovie = repository.save(movie);
 
@@ -102,6 +105,24 @@ public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResp
         repository.deleteById(id);
     }
 
+//    TODO: ADJUST LOGIC OF MOVIE RATINGS
+
+    @Override
+    public ApiMessageResponseDto updateMovieRating(Long id, MovieRatingDto movieRatingDto) {
+        Movie movie = getMovie(id).get();
+        Integer ratingsAmount = movie.getRatingsAmount();
+
+        // Increase Rating Amount
+        movie.setRatingsAmount(movie.getRatingsAmount() + 1);
+
+        Double rating = movie.getRating() + movieRatingDto.getRating() / movie.getRatingsAmount();
+        movie.setRating(rating);
+
+        repository.save(movie);
+
+        return new ApiMessageResponseDto("Avaliado com sucesso");
+    }
+
     private Movie updateMovie(Movie movie,
                               MovieRequestDto requestDto) {
         movie.setId(movie.getId());
@@ -120,4 +141,5 @@ public class MovieServiceImpl implements ICrudService<MovieRequestDto, MovieResp
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado")));
     }
+
 }
