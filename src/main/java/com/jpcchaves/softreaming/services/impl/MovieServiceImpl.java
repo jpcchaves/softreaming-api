@@ -25,6 +25,9 @@ import java.util.Set;
 @Service
 public class MovieServiceImpl implements MovieService {
 
+    private static final int ONE = 1;
+    private static final int TWO = 2;
+
     private final MovieRepository repository;
     private final CategoryRepository categoryRepository;
     private final MapperUtils mapper;
@@ -120,7 +123,7 @@ public class MovieServiceImpl implements MovieService {
             movie.setRating(movieRatingDto.getRating());
         }
 
-        movie.setRatingsAmount(movie.getRatingsAmount() + 1);
+        movie.setRatingsAmount(movie.getRatingsAmount() + ONE);
 
         repository.save(movie);
 
@@ -128,12 +131,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     private Double formatRating(Double rating) {
-        BigDecimal bd = new BigDecimal(rating).setScale(2, RoundingMode.HALF_EVEN);
+        BigDecimal bd = new BigDecimal(rating).setScale(TWO, RoundingMode.HALF_EVEN);
         return bd.doubleValue();
     }
 
     private Double calculateRating(Double previousRating, Double currentRating) {
-        Double result = (previousRating + currentRating) / 2;
+        Double result = (previousRating + currentRating) / TWO;
         return formatRating(result);
     }
 
