@@ -30,8 +30,6 @@ public class Movie {
     private String posterUrl;
     @CreatedDate
     private Date createdAt;
-    private Double rating;
-    private Integer ratingsAmount;
 
     @ManyToMany(
             fetch = FetchType.EAGER,
@@ -69,9 +67,8 @@ public class Movie {
                  String movieUrl,
                  String posterUrl,
                  Date createdAt,
-                 Double rating,
-                 Integer ratingsAmount,
-                 Set<Category> categories) {
+                 Set<Category> categories,
+                 Rating ratings) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -80,9 +77,8 @@ public class Movie {
         this.movieUrl = movieUrl;
         this.posterUrl = posterUrl;
         this.createdAt = createdAt;
-        this.rating = rating;
-        this.ratingsAmount = ratingsAmount;
         this.categories = categories;
+        this.ratings = ratings;
     }
 
     public Long getId() {
@@ -157,19 +153,11 @@ public class Movie {
         this.categories = categories;
     }
 
-    public Double getRating() {
-        return rating;
+    public Rating getRatings() {
+        return ratings;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
-
-    public Integer getRatingsAmount() {
-        return ratingsAmount;
-    }
-
-    public void setRatingsAmount(Integer ratingsAmount) {
-        this.ratingsAmount = ratingsAmount;
+    public void setRatings(Rating ratings) {
+        this.ratings = ratings;
     }
 }

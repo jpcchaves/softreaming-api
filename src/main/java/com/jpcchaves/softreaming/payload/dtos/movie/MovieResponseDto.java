@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.payload.dtos.movie;
 
 import com.jpcchaves.softreaming.entities.Category;
+import com.jpcchaves.softreaming.entities.Rating;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -15,8 +16,8 @@ public class MovieResponseDto {
     private String movieUrl;
     private String posterUrl;
     private Date createdAt;
-    private Double rating = 0.0;
     private Set<Category> categories = new HashSet<>();
+    private Rating ratings;
 
     public MovieResponseDto() {
     }
@@ -29,8 +30,8 @@ public class MovieResponseDto {
                             String movieUrl,
                             String posterUrl,
                             Date createdAt,
-                            Double rating,
-                            Set<Category> categories) {
+                            Set<Category> categories,
+                            Rating ratings) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -39,8 +40,8 @@ public class MovieResponseDto {
         this.movieUrl = movieUrl;
         this.posterUrl = posterUrl;
         this.createdAt = createdAt;
-        this.rating = rating;
         this.categories = categories;
+        this.ratings = ratings;
     }
 
     public Long getId() {
@@ -114,12 +115,13 @@ public class MovieResponseDto {
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
-
-    public Double getRating() {
-        return rating;
+    
+    public Rating getRatings() {
+        return ratings;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setRatings(Rating ratings) {
+        this.ratings = ratings;
     }
 }
+

@@ -1,26 +1,56 @@
 package com.jpcchaves.softreaming.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.util.Date;
 
 @Entity
-@Table(name = "ratigs")
+@Table(name = "ratings")
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
     private Double rating;
     private Integer ratingsAmount;
+    private Long userId;
+    @JsonIgnore
+    @CreatedDate
+    private Date createdAt;
 
     @OneToOne(mappedBy = "ratings")
+    @JsonIgnore
     private Movie movie;
 
     public Rating() {
+    }
+
+    public Rating(Double rating,
+                  Integer ratingsAmount,
+                  Movie movie,
+                  Long userId
+    ) {
+        this.rating = rating;
+        this.ratingsAmount = ratingsAmount;
+        this.movie = movie;
+        this.userId = userId;
     }
 
     public Rating(Long id, Double rating, Integer ratingsAmount, Movie movie) {
         this.id = id;
         this.rating = rating;
         this.ratingsAmount = ratingsAmount;
+        this.movie = movie;
+    }
+
+    public Rating(Long id, Double rating, Integer ratingsAmount, Long userId, Date createdAt, Movie movie) {
+        this.id = id;
+        this.rating = rating;
+        this.ratingsAmount = ratingsAmount;
+        this.userId = userId;
+        this.createdAt = createdAt;
         this.movie = movie;
     }
 
@@ -54,5 +84,21 @@ public class Rating {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

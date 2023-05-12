@@ -2,6 +2,7 @@ package com.jpcchaves.softreaming.services.impl;
 
 import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
+import com.jpcchaves.softreaming.entities.Rating;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
@@ -10,7 +11,9 @@ import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
+import com.jpcchaves.softreaming.repositories.RatingRepository;
 import com.jpcchaves.softreaming.services.MovieService;
+import com.jpcchaves.softreaming.services.SecurityContextService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -29,14 +32,20 @@ public class MovieServiceImpl implements MovieService {
     private static final int TWO = 2;
 
     private final MovieRepository repository;
+    private final RatingRepository ratingRepository;
     private final CategoryRepository categoryRepository;
+    private final SecurityContextService securityContextService;
     private final MapperUtils mapper;
 
     public MovieServiceImpl(MovieRepository repository,
+                            RatingRepository ratingRepository,
                             CategoryRepository categoryRepository,
+                            SecurityContextService securityContextService,
                             MapperUtils mapper) {
         this.repository = repository;
+        this.ratingRepository = ratingRepository;
         this.categoryRepository = categoryRepository;
+        this.securityContextService = securityContextService;
         this.mapper = mapper;
     }
 
@@ -51,10 +60,14 @@ public class MovieServiceImpl implements MovieService {
 
             Movie movie = mapper.parseObject(requestDto, Movie.class);
             movie.setCategories(categorySet);
-            movie.setRating(0.0);
-            movie.setRatingsAmount(0);
 
             Movie savedMovie = repository.save(movie);
+
+            Rating savedRating = ratingRepository.save(new Rating(0.0, 0, savedMovie, securityContextService.getCurrentLoggedUser().getId()));
+
+            savedMovie.setRatings(savedRating);
+
+            repository.save(savedMovie);
 
             MovieRequestDto movieDto = mapper.parseObject(savedMovie, MovieRequestDto.class);
 
@@ -113,21 +126,20 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public ApiMessageResponseDto updateMovieRating(Long id, MovieRatingDto movieRatingDto) {
         Movie movie = getMovie(id).get();
-        Integer ratingsAmount = movie.getRatingsAmount();
+        Rating ratings = movie.getRatings();
 
-        if (ratingsAmount > 0) {
-            Double rating = calculateRating(movie.getRating(), movieRatingDto.getRating());
-
-            movie.setRating(rating);
+        if (ratings.getRatingsAmount() > 0) {
+            Double rating = calculateRating(ratings.getRating(), movieRatingDto.getRating());
+            ratings.setRating(rating);
         } else {
-            movie.setRating(movieRatingDto.getRating());
+            ratings.setRating(movieRatingDto.getRating());
         }
 
-        movie.setRatingsAmount(movie.getRatingsAmount() + ONE);
+        ratings.setRatingsAmount(ratings.getRatingsAmount() + ONE);
 
-        repository.save(movie);
+        ratingRepository.save(ratings);
 
-        return new ApiMessageResponseDto("Avaliado com sucesso");
+        return new ApiMessageResponseDto("Filme avaliado com sucesso");
     }
 
     private Double formatRating(Double rating) {
