@@ -15,6 +15,8 @@ import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -125,8 +127,14 @@ public class MovieServiceImpl implements MovieService {
         return new ApiMessageResponseDto("Avaliado com sucesso");
     }
 
+    private Double formatRating(Double rating) {
+        BigDecimal bd = new BigDecimal(rating).setScale(2, RoundingMode.HALF_EVEN);
+        return bd.doubleValue();
+    }
+
     private Double calculateRating(Double previousRating, Double currentRating) {
-        return (previousRating + currentRating) / 2;
+        Double result = (previousRating + currentRating) / 2;
+        return formatRating(result);
     }
 
     private Movie updateMovie(Movie movie,

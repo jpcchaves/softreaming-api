@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -124,7 +125,7 @@ public class MovieController {
     }
 
     @PatchMapping("/{id}/rating")
-    public ResponseEntity<ApiMessageResponseDto> updateRating(@PathVariable("id") Long id, @RequestBody MovieRatingDto movieRatingDto) {
+    public ResponseEntity<ApiMessageResponseDto> updateRating(@PathVariable("id") Long id, @Valid @RequestBody MovieRatingDto movieRatingDto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.updateMovieRating(id, movieRatingDto));
     }
 }
