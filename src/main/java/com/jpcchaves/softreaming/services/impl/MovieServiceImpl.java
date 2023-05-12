@@ -105,18 +105,25 @@ public class MovieServiceImpl implements MovieService {
         repository.deleteById(id);
     }
 
-//    TODO: ADJUST LOGIC OF MOVIE RATINGS
-
     @Override
     public ApiMessageResponseDto updateMovieRating(Long id, MovieRatingDto movieRatingDto) {
         Movie movie = getMovie(id).get();
         Integer ratingsAmount = movie.getRatingsAmount();
 
+        if (ratingsAmount > 0) {
+            Double prevRating = movie.getRating();
+            Double newRating = movieRatingDto.getRating();
+
+            Double rating = (prevRating + newRating) / 2;
+
+            movie.setRating(rating);
+        } else {
+            movie.setRating(movieRatingDto.getRating());
+        }
+
         // Increase Rating Amount
         movie.setRatingsAmount(movie.getRatingsAmount() + 1);
 
-        Double rating = movie.getRating() + movieRatingDto.getRating() / movie.getRatingsAmount();
-        movie.setRating(rating);
 
         repository.save(movie);
 
