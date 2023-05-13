@@ -3,6 +3,7 @@ package com.jpcchaves.softreaming.services.impl;
 import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
 import com.jpcchaves.softreaming.entities.Rating;
+import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
@@ -51,8 +52,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponseDto create(MovieRequestDto requestDto) {
-        try {
 
+        if (repository.existsByName(requestDto.getName())) {
+            throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + requestDto.getName());
+        }
+
+        try {
             List<Category> categoriesList = categoryRepository
                     .findAllById(requestDto.getCategoriesIds());
 
@@ -69,9 +74,7 @@ public class MovieServiceImpl implements MovieService {
 
             repository.save(savedMovie);
 
-            MovieRequestDto movieDto = mapper.parseObject(savedMovie, MovieRequestDto.class);
-
-            MovieResponseDto movieResponseDto = mapper.parseObject(movieDto, MovieResponseDto.class);
+            MovieResponseDto movieResponseDto = mapper.parseObject(savedMovie, MovieResponseDto.class);
             return movieResponseDto;
         } catch (DataIntegrityViolationException ex) {
             throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
