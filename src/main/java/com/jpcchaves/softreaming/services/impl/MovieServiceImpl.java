@@ -10,6 +10,7 @@ import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.repositories.RatingRepository;
@@ -82,9 +83,9 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieResponseDto> getAll() {
+    public List<MovieResponseMinDto> getAll() {
         List<Movie> movies = repository.findAll();
-        List<MovieResponseDto> movieDtos = mapper.parseListObjects(movies, MovieResponseDto.class);
+        List<MovieResponseMinDto> movieDtos = mapper.parseListObjects(movies, MovieResponseMinDto.class);
         return movieDtos;
     }
 
@@ -160,7 +161,8 @@ public class MovieServiceImpl implements MovieService {
         movie.setId(movie.getId());
         movie.setCreatedAt(movie.getCreatedAt());
         movie.setName(requestDto.getName());
-        movie.setDescription(requestDto.getDescription());
+        movie.setShortDescription(requestDto.getShortDescription());
+        movie.setLongDescription(requestDto.getLongDescription());
         movie.setDuration(requestDto.getDuration());
         movie.setMovieUrl(requestDto.getMovieUrl());
         movie.setPosterUrl(requestDto.getPosterUrl());

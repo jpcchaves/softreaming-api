@@ -10,7 +10,8 @@ import java.util.Set;
 public class MovieResponseDto {
     private Long id;
     private String name;
-    private String description;
+    private String shortDescription;
+    private String longDescription;
     private String duration;
     private String releaseDate;
     private String movieUrl;
@@ -24,7 +25,8 @@ public class MovieResponseDto {
 
     public MovieResponseDto(Long id,
                             String name,
-                            String description,
+                            String shortDescription,
+                            String longDescription,
                             String duration,
                             String releaseDate,
                             String movieUrl,
@@ -34,7 +36,8 @@ public class MovieResponseDto {
                             Rating ratings) {
         this.id = id;
         this.name = name;
-        this.description = description;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
         this.duration = duration;
         this.releaseDate = releaseDate;
         this.movieUrl = movieUrl;
@@ -60,12 +63,20 @@ public class MovieResponseDto {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
     }
 
     public String getDuration() {
@@ -115,7 +126,7 @@ public class MovieResponseDto {
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
-    
+
     public Rating getRatings() {
         return ratings;
     }

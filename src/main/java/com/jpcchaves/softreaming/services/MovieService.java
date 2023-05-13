@@ -4,13 +4,14 @@ import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 
 import java.util.List;
 
 public interface MovieService {
     MovieResponseDto create(MovieRequestDto requestDto);
 
-    List<MovieResponseDto> getAll();
+    List<MovieResponseMinDto> getAll();
 
     MovieResponseDto getById(Long id);
 

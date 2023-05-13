@@ -15,6 +15,7 @@ public class Rating {
     private Long id;
     private Double rating;
     private Integer ratingsAmount;
+    @JsonIgnore
     private Long userId;
     @JsonIgnore
     @CreatedDate

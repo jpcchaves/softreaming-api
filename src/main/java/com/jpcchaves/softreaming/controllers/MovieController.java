@@ -4,6 +4,7 @@ import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.services.impl.MovieServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -63,7 +64,7 @@ public class MovieController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<MovieResponseDto>> getAll() {
+    public ResponseEntity<List<MovieResponseMinDto>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAll());
     }
 

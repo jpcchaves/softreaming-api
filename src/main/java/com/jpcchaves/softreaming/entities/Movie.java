@@ -18,8 +18,10 @@ public class Movie {
     private Long id;
     @Column(nullable = false, unique = true)
     private String name;
+    @Column(nullable = false)
+    private String shortDescription;
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String description;
+    private String longDescription;
     @Column(nullable = false)
     private String duration;
     @Column(nullable = false)
@@ -61,7 +63,8 @@ public class Movie {
 
     public Movie(Long id,
                  String name,
-                 String description,
+                 String shortDescription,
+                 String longDescription,
                  String duration,
                  String releaseDate,
                  String movieUrl,
@@ -71,7 +74,8 @@ public class Movie {
                  Rating ratings) {
         this.id = id;
         this.name = name;
-        this.description = description;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
         this.duration = duration;
         this.releaseDate = releaseDate;
         this.movieUrl = movieUrl;
@@ -97,12 +101,20 @@ public class Movie {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
     }
 
     public String getDuration() {

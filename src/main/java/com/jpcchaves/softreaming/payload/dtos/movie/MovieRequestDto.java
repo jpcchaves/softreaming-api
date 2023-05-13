@@ -11,7 +11,8 @@ public class MovieRequestDto {
     private Long id;
     private List<Long> categoriesIds;
     private String name;
-    private String description;
+    private String shortDescription;
+    private String longDescription;
     private String duration;
     private String releaseDate;
     private String movieUrl;
@@ -25,7 +26,8 @@ public class MovieRequestDto {
     public MovieRequestDto(Long id,
                            List<Long> categoriesIds,
                            String name,
-                           String description,
+                           String shortDescription,
+                           String longDescription,
                            String duration,
                            String releaseDate,
                            String movieUrl,
@@ -35,7 +37,8 @@ public class MovieRequestDto {
         this.id = id;
         this.categoriesIds = categoriesIds;
         this.name = name;
-        this.description = description;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
         this.duration = duration;
         this.releaseDate = releaseDate;
         this.movieUrl = movieUrl;
@@ -68,12 +71,20 @@ public class MovieRequestDto {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
     }
 
     public String getDuration() {
