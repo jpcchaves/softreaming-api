@@ -7,10 +7,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Date;
 
+@Component
 public class JwtAuthenticationEntrypoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException authException) throws IOException, ServletException {
@@ -27,7 +29,7 @@ public class JwtAuthenticationEntrypoint implements AuthenticationEntryPoint {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        
+
         res.getWriter().write(obj.toString());
     }
 }

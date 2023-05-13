@@ -1,5 +1,7 @@
 package com.jpcchaves.softreaming.config.security;
 
+import com.jpcchaves.softreaming.security.CustomAccessDeniedHandler;
+import com.jpcchaves.softreaming.security.JwtAuthenticationEntrypoint;
 import com.jpcchaves.softreaming.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +11,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,13 +19,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter authenticationFilter;
+    private final JwtAuthenticationEntrypoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    public SecurityConfig(UserDetailsService userDetailsService,
-                          JwtAuthenticationFilter authenticationFilter) {
-        this.userDetailsService = userDetailsService;
+
+    public SecurityConfig(
+            JwtAuthenticationFilter authenticationFilter,
+            JwtAuthenticationEntrypoint authenticationEntryPoint,
+            CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.authenticationFilter = authenticationFilter;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -57,11 +63,11 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated()
                 )
-//                .exceptionHandling(exception ->
-//                        exception
-//                                .authenticationEntryPoint(authenticationEntryPoint)
-//                                .accessDeniedHandler(customAccessDeniedHandler)
-//                )
+                .exceptionHandling(exception ->
+                        exception
+                                .authenticationEntryPoint(authenticationEntryPoint)
+                                .accessDeniedHandler(customAccessDeniedHandler)
+                )
                 .sessionManagement(session ->
                         session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
