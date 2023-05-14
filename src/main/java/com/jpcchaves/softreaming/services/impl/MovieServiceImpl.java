@@ -132,7 +132,7 @@ public class MovieServiceImpl implements MovieService {
         Movie movie = getMovie(id).get();
         Rating ratings = movie.getRatings();
 
-        if (ratings.getRatingsAmount() > 0) {
+        if (hasMoreThanOneRating(ratings.getRatingsAmount())) {
             Double rating = calculateRating(ratings.getRating(), movieRatingDto.getRating());
             ratings.setRating(rating);
         } else {
@@ -144,6 +144,10 @@ public class MovieServiceImpl implements MovieService {
         ratingRepository.save(ratings);
 
         return new ApiMessageResponseDto("Filme avaliado com sucesso");
+    }
+
+    private Boolean hasMoreThanOneRating(Integer ratingsAmount) {
+        return ratingsAmount > 0;
     }
 
     private Double formatRating(Double rating) {
