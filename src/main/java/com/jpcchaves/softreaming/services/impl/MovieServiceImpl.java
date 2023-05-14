@@ -184,11 +184,6 @@ public class MovieServiceImpl implements MovieService {
         return formatRating(avgRating / lineRatingList.size());
     }
 
-    private Double calculateRating(Double previousRating, Double currentRating) {
-        Double result = (previousRating + currentRating) / TWO;
-        return formatRating(result);
-    }
-
     private Movie updateMovie(Movie movie,
                               MovieRequestDto requestDto) {
         movie.setId(movie.getId());
