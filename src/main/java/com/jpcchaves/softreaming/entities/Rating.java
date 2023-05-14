@@ -16,8 +16,6 @@ public class Rating {
     private Double rating;
     private Integer ratingsAmount;
     @JsonIgnore
-    private Long userId;
-    @JsonIgnore
     @CreatedDate
     private Date createdAt;
 
@@ -30,13 +28,11 @@ public class Rating {
 
     public Rating(Double rating,
                   Integer ratingsAmount,
-                  Movie movie,
-                  Long userId
+                  Movie movie
     ) {
         this.rating = rating;
         this.ratingsAmount = ratingsAmount;
         this.movie = movie;
-        this.userId = userId;
     }
 
     public Rating(Long id, Double rating, Integer ratingsAmount, Movie movie) {
@@ -46,11 +42,10 @@ public class Rating {
         this.movie = movie;
     }
 
-    public Rating(Long id, Double rating, Integer ratingsAmount, Long userId, Date createdAt, Movie movie) {
+    public Rating(Long id, Double rating, Integer ratingsAmount, Date createdAt, Movie movie) {
         this.id = id;
         this.rating = rating;
         this.ratingsAmount = ratingsAmount;
-        this.userId = userId;
         this.createdAt = createdAt;
         this.movie = movie;
     }
@@ -85,14 +80,6 @@ public class Rating {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public Date getCreatedAt() {

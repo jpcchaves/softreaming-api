@@ -49,7 +49,7 @@ public class Movie {
     @JoinTable(
             name = "movie_rating",
             joinColumns = {
-                    @JoinColumn(name = "movie_id", referencedColumnName = "id")
+                    @JoinColumn(name = "movie_id", referencedColumnName = "id"),
             },
             inverseJoinColumns = {
                     @JoinColumn(name = "rating_id", referencedColumnName = "id")

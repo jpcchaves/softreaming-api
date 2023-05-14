@@ -69,10 +69,6 @@ public class MovieServiceImpl implements MovieService {
 
             Movie savedMovie = repository.save(movie);
 
-            Rating savedRating = ratingRepository.save(new Rating(0.0, 0, savedMovie, securityContextService.getCurrentLoggedUser().getId()));
-
-            savedMovie.setRatings(savedRating);
-
             repository.save(savedMovie);
 
             MovieResponseDto movieResponseDto = mapper.parseObject(savedMovie, MovieResponseDto.class);
@@ -131,7 +127,7 @@ public class MovieServiceImpl implements MovieService {
     public ApiMessageResponseDto updateMovieRating(Long id, MovieRatingDto movieRatingDto) {
         Movie movie = getMovie(id).get();
         Rating ratings = movie.getRatings();
-
+        
         if (hasMoreThanOneRating(ratings.getRatingsAmount())) {
             Double rating = calculateRating(ratings.getRating(), movieRatingDto.getRating());
             ratings.setRating(rating);
