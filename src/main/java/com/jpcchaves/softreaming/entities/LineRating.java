@@ -3,18 +3,19 @@ package com.jpcchaves.softreaming.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table
-public class LineRating {
+public class LineRating implements Serializable {
+    private static final long serialVersionUID = -6819849785007650200L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double rate;
-    private UserDetails user;
+    private Long userId;
     @ManyToOne(
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
@@ -31,12 +32,25 @@ public class LineRating {
     public LineRating() {
     }
 
-    public LineRating(Long id, Double rate, UserDetails user, Rating rating, Date createdAt) {
+    public LineRating(Long id, Double rate, Long userId, Rating rating, Date createdAt) {
         this.id = id;
         this.rate = rate;
-        this.user = user;
+        this.userId = userId;
         this.rating = rating;
         this.createdAt = createdAt;
+    }
+
+    public LineRating(Double rate, Long userId) {
+        this.rate = rate;
+        this.userId = userId;
+    }
+
+    public LineRating(Double rate,
+                      Long userId,
+                      Rating rating) {
+        this.rate = rate;
+        this.userId = userId;
+        this.rating = rating;
     }
 
     public Long getId() {
@@ -55,12 +69,12 @@ public class LineRating {
         this.rate = rate;
     }
 
-    public UserDetails getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(UserDetails user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Rating getRating() {

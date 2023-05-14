@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.services.impl;
 
 import com.jpcchaves.softreaming.entities.Category;
+import com.jpcchaves.softreaming.entities.LineRating;
 import com.jpcchaves.softreaming.entities.Movie;
 import com.jpcchaves.softreaming.entities.Rating;
 import com.jpcchaves.softreaming.exceptions.BadRequestException;
@@ -25,7 +26,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -102,7 +102,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieResponseDto getById(Long id) {
 
-        Movie movie = getMovie(id).get();
+        Movie movie = getMovie(id);
 
         MovieResponseDto movieDto = mapper.parseObject(movie, MovieResponseDto.class);
 
@@ -117,7 +117,7 @@ public class MovieServiceImpl implements MovieService {
 
             Set<Category> newCategories = new HashSet<>(categories);
 
-            Movie movie = getMovie(id).get();
+            Movie movie = getMovie(id);
             Movie updatedMovie = updateMovie(movie, requestDto);
             updatedMovie.setCategories(newCategories);
 
@@ -139,19 +139,28 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public ApiMessageResponseDto updateMovieRating(Long id, MovieRatingDto movieRatingDto) {
-        Movie movie = getMovie(id).get();
-        Rating ratings = movie.getRatings();
+        Movie movie = getMovie(id);
+        Rating movieRating = movie.getRatings();
+        Long userId = securityContextService.getCurrentLoggedUser().getId();
 
-        if (hasMoreThanOneRating(ratings.getRatingsAmount())) {
-            Double rating = calculateRating(ratings.getRating(), movieRatingDto.getRating());
-            ratings.setRating(rating);
+        LineRating newLineRating = new LineRating(movieRatingDto.getRating(), userId, movieRating);
+        lineItemRepository.save(newLineRating);
+
+
+        movieRating.setRatingsAmount(movieRating.getRatingsAmount() + ONE);
+
+        List<LineRating> lineRatingList = lineItemRepository.findAllByRating_Id(movieRating.getId());
+
+        if (hasMoreThanOneRating(movieRating.getRatingsAmount())) {
+            Double avgRating = calcRating(lineRatingList);
+
+            movieRating.setRating(avgRating);
+            movieRating.setRatingsAmount(lineRatingList.size());
         } else {
-            ratings.setRating(movieRatingDto.getRating());
+            movieRating.setRating(movieRatingDto.getRating());
         }
 
-        ratings.setRatingsAmount(ratings.getRatingsAmount() + ONE);
-
-        ratingRepository.save(ratings);
+        ratingRepository.save(movieRating);
 
         return new ApiMessageResponseDto("Filme avaliado com sucesso");
     }
@@ -163,6 +172,16 @@ public class MovieServiceImpl implements MovieService {
     private Double formatRating(Double rating) {
         BigDecimal bd = new BigDecimal(rating).setScale(TWO, RoundingMode.HALF_EVEN);
         return bd.doubleValue();
+    }
+
+    private Double calcRating(List<LineRating> lineRatingList) {
+        Double avgRating = 0.0;
+
+        for (LineRating lineRate : lineRatingList) {
+            avgRating += lineRate.getRate();
+        }
+
+        return formatRating(avgRating / lineRatingList.size());
     }
 
     private Double calculateRating(Double previousRating, Double currentRating) {
@@ -184,10 +203,10 @@ public class MovieServiceImpl implements MovieService {
         return movie;
     }
 
-    private Optional<Movie> getMovie(Long id) {
-        return Optional.ofNullable(repository
+    private Movie getMovie(Long id) {
+        return repository
                 .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado")));
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado"));
     }
 
 }

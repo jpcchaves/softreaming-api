@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "ratings")
-public class Rating {
+public class Rating implements Serializable {
+    private static final long serialVersionUID = -9212065549437355252L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
