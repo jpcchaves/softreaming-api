@@ -3,12 +3,14 @@ package com.jpcchaves.softreaming.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table
+@EntityListeners(AuditingEntityListener.class)
 public class LineRating implements Serializable {
     private static final long serialVersionUID = -6819849785007650200L;
     @Id

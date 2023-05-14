@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface LineRatingRepository extends JpaRepository<LineRating, Long> {
     List<LineRating> findAllByRating_Id(Long ratingId);
+
+    Boolean existsByUserIdAndRating_Id(Long userId, Long ratingId);
 }

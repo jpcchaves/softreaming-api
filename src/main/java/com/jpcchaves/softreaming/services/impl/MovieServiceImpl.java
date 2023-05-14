@@ -139,9 +139,13 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public ApiMessageResponseDto updateMovieRating(Long id, MovieRatingDto movieRatingDto) {
+        Long userId = securityContextService.getCurrentLoggedUser().getId();
         Movie movie = getMovie(id);
         Rating movieRating = movie.getRatings();
-        Long userId = securityContextService.getCurrentLoggedUser().getId();
+
+        if (lineItemRepository.existsByUserIdAndRating_Id(userId, movieRating.getId())) {
+            throw new BadRequestException("Você já avaliou o filme: " + movie.getName());
+        }
 
         LineRating newLineRating = new LineRating(movieRatingDto.getRating(), userId, movieRating);
         lineItemRepository.save(newLineRating);
