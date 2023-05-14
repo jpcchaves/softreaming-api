@@ -1,10 +1,12 @@
 package com.jpcchaves.softreaming.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "ratings")
@@ -15,6 +17,14 @@ public class Rating {
     private Long id;
     private Double rating;
     private Integer ratingsAmount;
+
+    @OneToMany(
+            mappedBy = "rating",
+            cascade = CascadeType.ALL
+    )
+    @JsonManagedReference
+    private List<LineRating> lineRatings;
+
     @JsonIgnore
     @CreatedDate
     private Date createdAt;
@@ -46,6 +56,20 @@ public class Rating {
         this.id = id;
         this.rating = rating;
         this.ratingsAmount = ratingsAmount;
+        this.createdAt = createdAt;
+        this.movie = movie;
+    }
+
+    public Rating(Long id,
+                  Double rating,
+                  Integer ratingsAmount,
+                  List<LineRating> lineRatings,
+                  Date createdAt,
+                  Movie movie) {
+        this.id = id;
+        this.rating = rating;
+        this.ratingsAmount = ratingsAmount;
+        this.lineRatings = lineRatings;
         this.createdAt = createdAt;
         this.movie = movie;
     }
@@ -88,5 +112,13 @@ public class Rating {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<LineRating> getLineRatings() {
+        return lineRatings;
+    }
+
+    public void setLineRatings(List<LineRating> lineRatings) {
+        this.lineRatings = lineRatings;
     }
 }
