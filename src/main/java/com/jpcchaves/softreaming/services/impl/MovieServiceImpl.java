@@ -12,6 +12,7 @@ import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
+import com.jpcchaves.softreaming.repositories.LineRatingRepository;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.repositories.RatingRepository;
 import com.jpcchaves.softreaming.services.MovieService;
@@ -35,17 +36,20 @@ public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository repository;
     private final RatingRepository ratingRepository;
+    private final LineRatingRepository lineItemRepository;
     private final CategoryRepository categoryRepository;
     private final SecurityContextService securityContextService;
     private final MapperUtils mapper;
 
     public MovieServiceImpl(MovieRepository repository,
                             RatingRepository ratingRepository,
+                            LineRatingRepository lineItemRepository,
                             CategoryRepository categoryRepository,
                             SecurityContextService securityContextService,
                             MapperUtils mapper) {
         this.repository = repository;
         this.ratingRepository = ratingRepository;
+        this.lineItemRepository = lineItemRepository;
         this.categoryRepository = categoryRepository;
         this.securityContextService = securityContextService;
         this.mapper = mapper;
@@ -58,6 +62,12 @@ public class MovieServiceImpl implements MovieService {
             throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + requestDto.getName());
         }
 
+        for (Long id : requestDto.getCategoriesIds()) {
+            if (!categoryRepository.existsById(id)) {
+                throw new BadRequestException("A categoria com o id: " + id + " não existe");
+            }
+        }
+
         try {
             List<Category> categoriesList = categoryRepository
                     .findAllById(requestDto.getCategoriesIds());
@@ -68,6 +78,10 @@ public class MovieServiceImpl implements MovieService {
             movie.setCategories(categorySet);
 
             Movie savedMovie = repository.save(movie);
+
+            Rating rating = ratingRepository.save(new Rating(0.0, 0, savedMovie));
+
+            savedMovie.setRatings(rating);
 
             repository.save(savedMovie);
 
@@ -127,7 +141,7 @@ public class MovieServiceImpl implements MovieService {
     public ApiMessageResponseDto updateMovieRating(Long id, MovieRatingDto movieRatingDto) {
         Movie movie = getMovie(id).get();
         Rating ratings = movie.getRatings();
-        
+
         if (hasMoreThanOneRating(ratings.getRatingsAmount())) {
             Double rating = calculateRating(ratings.getRating(), movieRatingDto.getRating());
             ratings.setRating(rating);

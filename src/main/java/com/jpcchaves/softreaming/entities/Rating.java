@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class Rating {
             cascade = CascadeType.ALL
     )
     @JsonManagedReference
-    private List<LineRating> lineRatings;
+    private List<LineRating> lineRatings = new ArrayList<>();
 
     @JsonIgnore
     @CreatedDate
