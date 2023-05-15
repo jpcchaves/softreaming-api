@@ -2,9 +2,13 @@ package com.jpcchaves.softreaming.entities;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "profiles")
+@EntityListeners(AuditingEntityListener.class)
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +18,7 @@ public class Profile {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String imgUrl;
     @CreatedDate
-    private String createdAt;
+    private Date createdAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
@@ -23,7 +27,7 @@ public class Profile {
     public Profile() {
     }
 
-    public Profile(Long id, String name, String imgUrl, String createdAt, User user) {
+    public Profile(Long id, String name, String imgUrl, Date createdAt, User user) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
@@ -55,11 +59,11 @@ public class Profile {
         this.imgUrl = imgUrl;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
