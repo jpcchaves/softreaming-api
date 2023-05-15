@@ -12,6 +12,7 @@ import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
+import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.repositories.LineRatingRepository;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,7 +81,10 @@ public class MovieServiceImpl implements MovieService {
 
             Movie savedMovie = repository.save(movie);
 
-            Rating rating = ratingRepository.save(new Rating(0.0, 0, savedMovie));
+            Rating newRating = new Rating(0.0, 0, savedMovie);
+            newRating.setCreatedAt(new Date());
+            
+            Rating rating = ratingRepository.save(newRating);
 
             savedMovie.setRatings(rating);
 
@@ -169,6 +174,15 @@ public class MovieServiceImpl implements MovieService {
         return new ApiMessageResponseDto("Filme avaliado com sucesso");
     }
 
+    @Override
+    public RatingDto getMovieRating(Long movieId) {
+        Movie movie = getMovie(movieId);
+        Rating movieRating = movie.getRatings();
+
+        RatingDto ratingDto = mapper.parseObject(movieRating, RatingDto.class);
+        return ratingDto;
+    }
+
     private Boolean hasMoreThanOneRating(Integer ratingsAmount) {
         return ratingsAmount > 0;
     }
@@ -198,7 +212,7 @@ public class MovieServiceImpl implements MovieService {
         movie.setDuration(requestDto.getDuration());
         movie.setMovieUrl(requestDto.getMovieUrl());
         movie.setPosterUrl(requestDto.getPosterUrl());
-        movie.setCategories(requestDto.getCategories());
+        movie.setCategories(mapper.parseSetObjects(requestDto.getCategories(), Category.class));
         return movie;
     }
 
