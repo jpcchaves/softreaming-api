@@ -4,7 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class MapperUtils {
@@ -22,6 +24,16 @@ public class MapperUtils {
     public <O, D> List<D> parseListObjects(List<O> origin, Class<D> destination) {
 
         List<D> destinationObjects = new ArrayList<>();
+
+        for (O o : origin) {
+            destinationObjects.add(mapper.map(o, destination));
+        }
+
+        return destinationObjects;
+    }
+
+    public <O, D> Set<D> parseSetObjects(Set<O> origin, Class<D> destination) {
+        Set<D> destinationObjects = new HashSet<>();
 
         for (O o : origin) {
             destinationObjects.add(mapper.map(o, destination));
