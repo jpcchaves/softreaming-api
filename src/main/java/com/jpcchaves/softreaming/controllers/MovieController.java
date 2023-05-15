@@ -5,6 +5,7 @@ import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
+import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import com.jpcchaves.softreaming.services.impl.MovieServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -128,5 +129,10 @@ public class MovieController {
     @PatchMapping("/{id}/rating")
     public ResponseEntity<ApiMessageResponseDto> updateRating(@PathVariable("id") Long id, @Valid @RequestBody MovieRatingDto movieRatingDto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.updateMovieRating(id, movieRatingDto));
+    }
+
+    @GetMapping("/{id}/rating")
+    public ResponseEntity<RatingDto> getMovieRating(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getMovieRating(id));
     }
 }
