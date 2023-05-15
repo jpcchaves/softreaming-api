@@ -126,11 +126,39 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @Operation(summary = "Adds a movie rating",
+            description = "Adds a movie rating by passing a movie ID and a JSON representation of the rating",
+            tags = {"Movie"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    schema = @Schema(implementation = ApiMessageResponseDto.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @PatchMapping("/{id}/rating")
     public ResponseEntity<ApiMessageResponseDto> updateRating(@PathVariable("id") Long id, @Valid @RequestBody MovieRatingDto movieRatingDto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.updateMovieRating(id, movieRatingDto));
     }
 
+    @Operation(summary = "Gets a rating list of a movie",
+            description = "Gets a list of all rating of a movie by passing a movie ID",
+            tags = {"Movie"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    array = @ArraySchema(schema = @Schema(implementation = RatingDto.class))
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @GetMapping("/{id}/rating")
     public ResponseEntity<RatingDto> getMovieRating(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getMovieRating(id));
