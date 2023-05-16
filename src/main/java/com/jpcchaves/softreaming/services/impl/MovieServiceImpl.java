@@ -8,10 +8,7 @@ import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.repositories.LineRatingRepository;
@@ -21,6 +18,10 @@ import com.jpcchaves.softreaming.services.MovieService;
 import com.jpcchaves.softreaming.services.SecurityContextService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -83,7 +84,7 @@ public class MovieServiceImpl implements MovieService {
 
             Rating newRating = new Rating(0.0, 0, savedMovie);
             newRating.setCreatedAt(new Date());
-            
+
             Rating rating = ratingRepository.save(newRating);
 
             savedMovie.setRatings(rating);
@@ -98,10 +99,12 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieResponseMinDto> getAll() {
-        List<Movie> movies = repository.findAll();
-        List<MovieResponseMinDto> movieDtos = mapper.parseListObjects(movies, MovieResponseMinDto.class);
-        return movieDtos;
+    public MovieResponsePaginatedDto getAll(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Movie> moviesPage = repository.findAll(pageable);
+
+        List<MovieResponseMinDto> movieResponseMinDtos = mapper.parseListObjects(moviesPage.getContent(), MovieResponseMinDto.class);
+
+        return buildMovieResponsePaginatedDto(movieResponseMinDtos, moviesPage);
     }
 
     @Override
@@ -220,6 +223,18 @@ public class MovieServiceImpl implements MovieService {
         return repository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado"));
+    }
+
+    private MovieResponsePaginatedDto buildMovieResponsePaginatedDto(List<MovieResponseMinDto> moviesResponse, Page<Movie> moviePage) {
+        MovieResponsePaginatedDto moviePaginated = new MovieResponsePaginatedDto();
+
+        moviePaginated.setContent(moviesResponse);
+        moviePaginated.setPageNo(moviePage.getNumber());
+        moviePaginated.setPageSize(moviePage.getSize());
+        moviePaginated.setTotalElements(moviePage.getTotalElements());
+        moviePaginated.setLast(moviePage.isLast());
+
+        return moviePaginated;
     }
 
 }

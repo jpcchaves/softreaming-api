@@ -4,7 +4,7 @@ import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponsePaginatedDto;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import com.jpcchaves.softreaming.services.impl.MovieServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,12 +14,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/movies")
@@ -65,8 +64,8 @@ public class MovieController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<MovieResponseMinDto>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.getAll());
+    public ResponseEntity<MovieResponsePaginatedDto> getAll(Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getAll(pageable));
     }
 
     @Operation(summary = "Gets a movie by ID",
