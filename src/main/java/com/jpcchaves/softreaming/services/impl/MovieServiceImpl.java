@@ -59,40 +59,27 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponseDto create(MovieRequestDto requestDto) {
+    public ApiMessageResponseDto create(MovieRequestDto requestDto) {
 
         if (repository.existsByName(requestDto.getName())) {
             throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + requestDto.getName());
         }
 
-        for (Long id : requestDto.getCategoriesIds()) {
-            if (!categoryRepository.existsById(id)) {
-                throw new BadRequestException("A categoria com o id: " + id + " não existe");
-            }
-        }
-
         try {
-            List<Category> categoriesList = categoryRepository
-                    .findAllById(requestDto.getCategoriesIds());
-
-            Set<Category> categorySet = new HashSet<>(categoriesList);
+            Set<Category> categoriesSet = new HashSet<>(categoryRepository
+                    .findAllById(requestDto.getCategoriesIds()));
 
             Movie movie = mapper.parseObject(requestDto, Movie.class);
-            movie.setCategories(categorySet);
+            movie.setCategories(categoriesSet);
 
             Movie savedMovie = repository.save(movie);
 
-            Rating newRating = new Rating(0.0, 0, savedMovie);
-            newRating.setCreatedAt(new Date());
-
-            Rating rating = ratingRepository.save(newRating);
-
+            Rating rating = ratingRepository.save(new Rating(0.0, 0, new Date(), savedMovie));
             savedMovie.setRatings(rating);
 
             repository.save(savedMovie);
 
-            MovieResponseDto movieResponseDto = mapper.parseObject(savedMovie, MovieResponseDto.class);
-            return movieResponseDto;
+            return new ApiMessageResponseDto("Filme criado com sucesso!");
         } catch (DataIntegrityViolationException ex) {
             throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
         }
@@ -112,9 +99,7 @@ public class MovieServiceImpl implements MovieService {
 
         Movie movie = getMovie(id);
 
-        MovieResponseDto movieDto = mapper.parseObject(movie, MovieResponseDto.class);
-
-        return movieDto;
+        return mapper.parseObject(movie, MovieResponseDto.class);
     }
 
     @Override
@@ -130,9 +115,8 @@ public class MovieServiceImpl implements MovieService {
             updatedMovie.setCategories(newCategories);
 
             Movie savedMovie = repository.save(updatedMovie);
-            MovieResponseDto movieDto = mapper.parseObject(savedMovie, MovieResponseDto.class);
 
-            return movieDto;
+            return mapper.parseObject(savedMovie, MovieResponseDto.class);
         } catch (DataIntegrityViolationException ex) {
             throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
         }
@@ -232,6 +216,7 @@ public class MovieServiceImpl implements MovieService {
         moviePaginated.setPageNo(moviePage.getNumber());
         moviePaginated.setPageSize(moviePage.getSize());
         moviePaginated.setTotalElements(moviePage.getTotalElements());
+        moviePaginated.setTotalPages(moviePage.getTotalPages());
         moviePaginated.setLast(moviePage.isLast());
 
         return moviePaginated;

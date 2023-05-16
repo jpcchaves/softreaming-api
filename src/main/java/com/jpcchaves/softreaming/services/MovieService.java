@@ -9,7 +9,7 @@ import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import org.springframework.data.domain.Pageable;
 
 public interface MovieService {
-    MovieResponseDto create(MovieRequestDto requestDto);
+    ApiMessageResponseDto create(MovieRequestDto requestDto);
 
     MovieResponsePaginatedDto getAll(Pageable pageable);
 

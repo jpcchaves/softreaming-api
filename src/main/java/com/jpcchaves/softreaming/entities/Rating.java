@@ -55,6 +55,13 @@ public class Rating implements Serializable {
         this.movie = movie;
     }
 
+    public Rating(Double rating, Integer ratingsAmount, Date createdAt, Movie movie) {
+        this.rating = rating;
+        this.ratingsAmount = ratingsAmount;
+        this.createdAt = createdAt;
+        this.movie = movie;
+    }
+
     public Rating(Long id, Double rating, Integer ratingsAmount, Date createdAt, Movie movie) {
         this.id = id;
         this.rating = rating;
