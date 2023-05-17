@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.controllers;
 
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.services.impl.CategoryServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -14,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -118,5 +120,10 @@ public class CategoryController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{id}/movies")
+    public ResponseEntity<Set<MovieResponseMinDto>> getAllMoviesByCategory(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getAllMoviesByCategoryId(id));
     }
 }

@@ -1,9 +1,11 @@
 package com.jpcchaves.softreaming.services.impl;
 
 import com.jpcchaves.softreaming.entities.Category;
+import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.services.ICrudService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CategoryServiceImpl implements ICrudService<CategoryDto, CategoryDto> {
@@ -62,7 +65,7 @@ public class CategoryServiceImpl implements ICrudService<CategoryDto, CategoryDt
             Category savedCategory = repository.save(updatedCategory);
             CategoryDto categoryDto = mapper.parseObject(savedCategory, CategoryDto.class);
 
-              return categoryDto;
+            return categoryDto;
         } catch (DataIntegrityViolationException ex) {
             throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
         }
@@ -72,6 +75,12 @@ public class CategoryServiceImpl implements ICrudService<CategoryDto, CategoryDt
     public void delete(Long id) {
         getCategory(id);
         repository.deleteById(id);
+    }
+
+    @Override
+    public Set<MovieResponseMinDto> getAllMoviesByCategoryId(Long categoryId) {
+        var category = repository.findById(categoryId).orElseThrow(() -> new BadRequestException(""));
+        return mapper.parseSetObjects(category.getMovies(), MovieResponseMinDto.class);
     }
 
     private Category updateCategory(Category category,
