@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -168,6 +165,23 @@ public class MovieServiceImpl implements MovieService {
 
         RatingDto ratingDto = mapper.parseObject(movieRating, RatingDto.class);
         return ratingDto;
+    }
+
+    @Override
+    public MovieResponsePaginatedDto filterByReleaseDate(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable, Optional<String> releaseDate) {
+        if (releaseDate.isPresent()) {
+            Page<Movie> movies = repository.findByReleaseDate(pageable, releaseDate.get());
+
+            if (movies.isEmpty()) {
+                throw new BadRequestException("Não há nenhum filme com a data de lançamento informada: " + releaseDate.get());
+            }
+
+            List<MovieResponseMinDto> movieResponseMinDtos = mapper.parseListObjects(movies.getContent(), MovieResponseMinDto.class);
+
+            return buildMovieResponsePaginatedDto(movieResponseMinDtos, movies);
+        } else {
+            throw new BadRequestException("Informe uma data de lançamento para conseguir realizar o filtro");
+        }
     }
 
     private Boolean hasMoreThanOneRating(Integer ratingsAmount) {
