@@ -12,4 +12,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Override
     Page<Movie> findAll(Pageable pageable);
+
+    Page<Movie> findByReleaseDate(Pageable pageable, String releaseDate);
 }
