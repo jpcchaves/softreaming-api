@@ -17,6 +17,7 @@ import com.jpcchaves.softreaming.repositories.RatingRepository;
 import com.jpcchaves.softreaming.services.MovieService;
 import com.jpcchaves.softreaming.services.SecurityContextService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -95,8 +96,15 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponseDto getById(Long id) {
 
         Movie movie = getMovie(id);
+        MovieResponseDto movieResponseDto = new MovieResponseDto();
 
-        return mapper.parseObject(movie, MovieResponseDto.class);
+        for (Category category : movie.getCategories()) {
+            movieResponseDto.getCategories().add(category.getCategory());
+        }
+
+        BeanUtils.copyProperties(movie, movieResponseDto);
+        
+        return movieResponseDto;
     }
 
     @Override
