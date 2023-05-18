@@ -172,4 +172,19 @@ public class Movie {
     public void setRatings(Rating ratings) {
         this.ratings = ratings;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Movie movie = (Movie) o;
+
+        return name.equals(movie.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

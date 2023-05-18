@@ -20,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/v1/movies")
 @SecurityRequirement(name = "Bearer Authentication")
@@ -167,8 +165,9 @@ public class MovieController {
 
     @GetMapping("/filter")
     public ResponseEntity<MovieResponsePaginatedDto> filterMoviesByReleaseDate(
-            @RequestParam(value = "releaseDate") Optional<String> releaseDate,
+            @RequestParam(value = "releaseDate", required = false) String releaseDate,
+            @RequestParam(value = "name", required = false) String name,
             Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.filterByReleaseDate(pageable, releaseDate));
+        return ResponseEntity.status(HttpStatus.OK).body(service.filterBy(pageable, releaseDate, name));
     }
 }

@@ -163,25 +163,51 @@ public class MovieServiceImpl implements MovieService {
         Movie movie = getMovie(movieId);
         Rating movieRating = movie.getRatings();
 
-        RatingDto ratingDto = mapper.parseObject(movieRating, RatingDto.class);
-        return ratingDto;
+        return mapper.parseObject(movieRating, RatingDto.class);
     }
 
     @Override
-    public MovieResponsePaginatedDto filterByReleaseDate(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable, Optional<String> releaseDate) {
-        if (releaseDate.isPresent()) {
-            Page<Movie> movies = repository.findByReleaseDate(pageable, releaseDate.get());
+    public MovieResponsePaginatedDto filterBy(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC)
+                                              Pageable pageable,
+                                              String releaseDate,
+                                              String name) {
 
-            if (movies.isEmpty()) {
-                throw new BadRequestException("Não há nenhum filme com a data de lançamento informada: " + releaseDate.get());
-            }
-
-            List<MovieResponseMinDto> movieResponseMinDtos = mapper.parseListObjects(movies.getContent(), MovieResponseMinDto.class);
-
-            return buildMovieResponsePaginatedDto(movieResponseMinDtos, movies);
-        } else {
-            throw new BadRequestException("Informe uma data de lançamento para conseguir realizar o filtro");
+        if (releaseDate == null && name == null) {
+            throw new BadRequestException("Informe ao menos um filtro para conseguir realizar a busca");
         }
+
+        if (releaseDate != null && name != null) {
+            return getMovieResponsePaginatedDto(pageable, releaseDate, name);
+        }
+
+        if (releaseDate != null) {
+            Page<Movie> movies = repository.findByReleaseDate(pageable, releaseDate);
+
+            return buildMovieResponsePaginatedDto(mapper.parseListObjects(movies.getContent(), MovieResponseMinDto.class), movies);
+        }
+
+        Page<Movie> movies = repository.findAll(pageable);
+
+        List<Movie> filteredMovies = compareMovieNames(movies.getContent(), name);
+
+        return buildMovieResponsePaginatedDto(mapper.parseListObjects(filteredMovies, MovieResponseMinDto.class), movies);
+    }
+
+    private MovieResponsePaginatedDto getMovieResponsePaginatedDto(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable, String releaseDate, String name) {
+        Page<Movie> movies = repository.findByReleaseDate(pageable, releaseDate);
+
+        List<Movie> filteredMovies = compareMovieNames(movies.getContent(), name);
+        return buildMovieResponsePaginatedDto(mapper.parseListObjects(filteredMovies, MovieResponseMinDto.class), movies);
+    }
+
+    private List<Movie> compareMovieNames(List<Movie> moviesToCompare, String nameToCompare) {
+        List<Movie> filteredMovies = new ArrayList<>();
+        for (Movie movie : moviesToCompare) {
+            if (movie.getName().toLowerCase(Locale.ROOT).contains(nameToCompare.toLowerCase(Locale.ROOT))) {
+                filteredMovies.add(movie);
+            }
+        }
+        return filteredMovies;
     }
 
     private Boolean hasMoreThanOneRating(Integer ratingsAmount) {

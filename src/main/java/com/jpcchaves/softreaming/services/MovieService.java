@@ -8,8 +8,6 @@ import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponsePaginatedDto;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
 public interface MovieService {
     ApiMessageResponseDto create(MovieRequestDto requestDto);
 
@@ -25,5 +23,5 @@ public interface MovieService {
 
     RatingDto getMovieRating(Long movieId);
 
-    MovieResponsePaginatedDto filterByReleaseDate(Pageable pageable, Optional<String> releaseDate);
+    MovieResponsePaginatedDto filterBy(Pageable pageable, String releaseDate, String name);
 }
