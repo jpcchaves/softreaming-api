@@ -17,8 +17,6 @@ CREATE TABLE
     `movies_categories` (
                             `movie_id` bigint NOT NULL,
                             `category_id` bigint NOT NULL,
-                            PRIMARY KEY (`movie_id`, `category_id`),
-                            KEY `FKqrh6tstpqrf9baynpdkvxtni1` (`category_id`),
                             CONSTRAINT `FKqrh6tstpqrf9baynpdkvxtni1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
                             CONSTRAINT `FKsep7u2w9avfsm5xe1l5ny5xgl` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`id`)
 );
