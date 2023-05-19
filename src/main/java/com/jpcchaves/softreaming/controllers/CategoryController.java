@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,6 +62,9 @@ public class CategoryController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
+    @Cacheable(
+            cacheNames = "categoryList"
+    )
     public ResponseEntity<List<CategoryDto>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
@@ -79,6 +83,9 @@ public class CategoryController {
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
+    )
+    @Cacheable(
+            cacheNames = "categoryById"
     )
     public ResponseEntity<CategoryDto> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.getById(id));
@@ -123,6 +130,9 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}/movies")
+    @Cacheable(
+            cacheNames = "moviesByCategory"
+    )
     public ResponseEntity<Set<MovieResponseMinDto>> getAllMoviesByCategory(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAllMoviesByCategoryId(id));
     }
