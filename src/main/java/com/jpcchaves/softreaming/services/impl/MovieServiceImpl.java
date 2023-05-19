@@ -27,7 +27,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -218,37 +221,29 @@ public class MovieServiceImpl implements MovieService {
         }
 
         if (releaseDate != null && name != null) {
-            return getMovieResponsePaginatedDto(pageable, releaseDate, name);
+            Page<Movie> moviePage = repository.findByNameContainingIgnoreCaseAndReleaseDate(pageable, name, releaseDate);
+            return getMovieResponsePaginatedDto(moviePage);
         }
 
+        Page<Movie> moviePage;
         if (releaseDate != null) {
-            Page<Movie> movies = repository.findByReleaseDate(pageable, releaseDate);
-
-            return buildMovieResponsePaginatedDto(mapper.parseListObjects(movies.getContent(), MovieResponseMinDto.class), movies);
+            moviePage = repository.findByReleaseDate(pageable, releaseDate);
+        } else {
+            moviePage = repository.findByNameContainingIgnoreCase(pageable, name);
         }
-
-        Page<Movie> movies = repository.findAll(pageable);
-
-        List<Movie> filteredMovies = compareMovieNames(movies.getContent(), name);
-
-        return buildMovieResponsePaginatedDto(mapper.parseListObjects(filteredMovies, MovieResponseMinDto.class), movies);
+        return getMovieResponsePaginatedDto(moviePage);
     }
 
-    private MovieResponsePaginatedDto getMovieResponsePaginatedDto(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable, String releaseDate, String name) {
-        Page<Movie> movies = repository.findByReleaseDate(pageable, releaseDate);
+    private MovieResponsePaginatedDto getMovieResponsePaginatedDto(Page<Movie> moviePage) {
+        MovieResponsePaginatedDto response = new MovieResponsePaginatedDto();
+        response.setContent(mapper.parseListObjects(moviePage.getContent(), MovieResponseMinDto.class));
+        response.setPageNo(moviePage.getNumber());
+        response.setPageSize(moviePage.getSize());
+        response.setTotalElements(moviePage.getTotalElements());
+        response.setTotalPages(moviePage.getTotalPages());
+        response.setLast(moviePage.isLast());
 
-        List<Movie> filteredMovies = compareMovieNames(movies.getContent(), name);
-        return buildMovieResponsePaginatedDto(mapper.parseListObjects(filteredMovies, MovieResponseMinDto.class), movies);
-    }
-
-    private List<Movie> compareMovieNames(List<Movie> moviesToCompare, String nameToCompare) {
-        List<Movie> filteredMovies = new ArrayList<>();
-        for (Movie movie : moviesToCompare) {
-            if (movie.getName().toLowerCase(Locale.ROOT).contains(nameToCompare.toLowerCase(Locale.ROOT))) {
-                filteredMovies.add(movie);
-            }
-        }
-        return filteredMovies;
+        return response;
     }
 
     private Boolean hasMoreThanOneRating(Integer ratingsAmount) {
