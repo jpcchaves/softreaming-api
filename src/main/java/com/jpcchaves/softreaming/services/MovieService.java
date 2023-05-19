@@ -19,7 +19,9 @@ public interface MovieService {
 
     void delete(Long id);
 
-    ApiMessageResponseDto updateMovieRating(Long id, MovieRatingDto movieRatingDto);
+    ApiMessageResponseDto addMovieRating(Long id, MovieRatingDto movieRatingDto);
+
+    ApiMessageResponseDto updateRating(Long id, Long ratingId, MovieRatingDto movieRatingDto);
 
     RatingDto getMovieRating(Long movieId);
 

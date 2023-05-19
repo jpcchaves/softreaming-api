@@ -103,7 +103,7 @@ public class MovieServiceImpl implements MovieService {
         }
 
         BeanUtils.copyProperties(movie, movieResponseDto);
-        
+
         return movieResponseDto;
     }
 
@@ -135,7 +135,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public ApiMessageResponseDto updateMovieRating(Long id, MovieRatingDto movieRatingDto) {
+    public ApiMessageResponseDto addMovieRating(Long id, MovieRatingDto movieRatingDto) {
         Long userId = securityContextService.getCurrentLoggedUser().getId();
         Movie movie = getMovie(id);
         Rating movieRating = movie.getRatings();
@@ -164,6 +164,39 @@ public class MovieServiceImpl implements MovieService {
         ratingRepository.save(movieRating);
 
         return new ApiMessageResponseDto("Filme avaliado com sucesso");
+    }
+
+    @Override
+    public ApiMessageResponseDto updateRating(Long id, Long ratingId, MovieRatingDto movieRatingDto) {
+        Long userId = securityContextService.getCurrentLoggedUser().getId();
+
+        LineRating lineRating = lineItemRepository
+                .findByUserIdAndId(userId, ratingId)
+                .orElseThrow(() -> new BadRequestException("Ocorreu um erro ao editar sua avaliação. Verifique os dados e tente novamente"));
+
+        lineRating.setRate(movieRatingDto.getRating());
+
+        lineItemRepository.save(lineRating);
+
+        Movie movie = getMovie(id);
+        Rating movieRating = movie.getRatings();
+
+        if (movieRating.getLineRatings().isEmpty()) {
+            throw new BadRequestException("Ainda não há avaliações para o filme");
+        }
+
+        if (hasMoreThanOneRating(movieRating.getRatingsAmount())) {
+            Double avgRating = calcRating(movie.getRatings().getLineRatings());
+
+            movieRating.setRating(avgRating);
+            movieRating.setRatingsAmount(movie.getRatings().getLineRatings().size());
+        } else {
+            movieRating.setRating(movieRatingDto.getRating());
+        }
+
+        repository.save(movie);
+
+        return new ApiMessageResponseDto("Avaliação atualizada com sucesso!");
     }
 
     @Override
