@@ -140,8 +140,8 @@ public class MovieController {
             }
     )
     @PatchMapping("/{id}/rating")
-    public ResponseEntity<ApiMessageResponseDto> updateRating(@PathVariable("id") Long id, @Valid @RequestBody MovieRatingDto movieRatingDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.updateMovieRating(id, movieRatingDto));
+    public ResponseEntity<ApiMessageResponseDto> addRating(@PathVariable("id") Long id, @Valid @RequestBody MovieRatingDto movieRatingDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.addMovieRating(id, movieRatingDto));
     }
 
     @Operation(summary = "Gets a rating list of a movie",
@@ -161,6 +161,13 @@ public class MovieController {
     @GetMapping("/{id}/rating")
     public ResponseEntity<RatingDto> getMovieRating(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getMovieRating(id));
+    }
+
+    @PatchMapping("/{id}/rating/{ratingId}")
+    public ResponseEntity<ApiMessageResponseDto> updateRating(@PathVariable("id") Long id,
+                                                              @PathVariable("ratingId") Long ratingId,
+                                                              @Valid @RequestBody MovieRatingDto movieRatingDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateRating(id, ratingId, movieRatingDto));
     }
 
     @GetMapping("/filter")
