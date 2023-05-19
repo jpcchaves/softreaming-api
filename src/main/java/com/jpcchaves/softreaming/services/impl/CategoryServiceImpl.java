@@ -7,7 +7,7 @@ import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
-import com.jpcchaves.softreaming.services.ICrudService;
+import com.jpcchaves.softreaming.services.CategoryService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class CategoryServiceImpl implements ICrudService<CategoryDto, CategoryDto> {
+public class CategoryServiceImpl implements CategoryService<CategoryDto, CategoryDto> {
 
     private final CategoryRepository repository;
     private final MapperUtils mapper;

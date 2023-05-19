@@ -5,7 +5,7 @@ import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import java.util.List;
 import java.util.Set;
 
-public interface ICrudService<DtoRequest, DtoResponse> {
+public interface CategoryService<DtoRequest, DtoResponse> {
     DtoResponse create(DtoRequest requestDto);
 
     List<DtoResponse> getAll();
