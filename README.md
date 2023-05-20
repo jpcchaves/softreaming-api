@@ -1,9 +1,9 @@
 
 # Softreaming REST API
 
-<a href="https://ibb.co/pJbfFNr"><img src="https://i.ibb.co/86NrZG4/softreaming-api1.png" alt="softreaming-api1" border="0"></a>
-<a href="https://ibb.co/0Mb5s5P"><img src="https://i.ibb.co/J7JZ3ZX/softreaming-api2.png" alt="softreaming-api2" border="0"></a>
-<a href="https://ibb.co/rM8NPNr"><img src="https://i.ibb.co/NpDbhbB/softreaming-api3.png" alt="softreaming-api3" border="0"></a>
+<a href="https://ibb.co/QfB8WzP"><img src="https://i.ibb.co/f2R83Bk/softreaming1.png" alt="softreaming1" border="0"></a>
+<a href="https://ibb.co/KjzP7nk"><img src="https://i.ibb.co/PZzL4kn/softreaming2.png" alt="softreaming2" border="0"></a>
+<a href="https://ibb.co/P5pDgZ5"><img src="https://i.ibb.co/GVwHRvV/softreaming3.png" alt="softreaming3" border="0"></a>
 
 O projeto trata-se de uma api inspirada num serviço de streaming, onde é possível realizar o cadastro de usuários, efetuar a autenticação.
 Todos os usuários podem criar perfis, podendo ter, no máximo, 4 perfis por conta.
