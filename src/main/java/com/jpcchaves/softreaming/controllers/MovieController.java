@@ -163,6 +163,20 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getMovieRating(id));
     }
 
+    @Operation(summary = "Updates a movie rating",
+            description = "Updates a movie rating by passing a movie ID and a JSON representation of the rating",
+            tags = {"Movie"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    schema = @Schema(implementation = ApiMessageResponseDto.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @PatchMapping("/{id}/rating/{ratingId}")
     public ResponseEntity<ApiMessageResponseDto> updateRating(@PathVariable("id") Long id,
                                                               @PathVariable("ratingId") Long ratingId,
@@ -170,6 +184,20 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(service.updateRating(id, ratingId, movieRatingDto));
     }
 
+    @Operation(summary = "Filter movies",
+            description = "Filters movies by passing a movie name or/and release date. If you dont pass any parameters, a list of movies will be returned",
+            tags = {"Movie"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    schema = @Schema(implementation = MovieResponsePaginatedDto.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @GetMapping("/filter")
     public ResponseEntity<MovieResponsePaginatedDto> filterMoviesByReleaseDate(
             @RequestParam(value = "releaseDate", required = false) String releaseDate,
