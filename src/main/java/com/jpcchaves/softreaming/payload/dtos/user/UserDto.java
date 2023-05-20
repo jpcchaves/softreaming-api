@@ -1,6 +1,6 @@
 package com.jpcchaves.softreaming.payload.dtos.user;
 
-import com.jpcchaves.softreaming.entities.Role;
+import com.jpcchaves.softreaming.payload.dtos.auth.RoleDto;
 
 import java.util.Set;
 
@@ -10,7 +10,7 @@ public class UserDto {
     private String username;
     private String email;
     private Boolean isAdmin;
-    private Set<Role> roles;
+    private Set<RoleDto> roles;
 
     public UserDto() {
     }
@@ -20,7 +20,7 @@ public class UserDto {
                    String username,
                    String email,
                    Boolean isAdmin,
-                   Set<Role> roles) {
+                   Set<RoleDto> roles) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -69,11 +69,11 @@ public class UserDto {
         isAdmin = admin;
     }
 
-    public Set<Role> getRoles() {
+    public Set<RoleDto> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<RoleDto> roles) {
         this.roles = roles;
     }
 }

@@ -141,7 +141,7 @@ public class AuthServiceImpl implements AuthService {
         userDto.setEmail(user.getEmail());
         userDto.setName(user.getName());
         userDto.setUsername(user.getUsername());
-        userDto.setRoles(user.getRoles());
+        userDto.setRoles(mapperUtils.parseSetObjects(user.getRoles(), RoleDto.class));
         userDto.setAdmin(user.getAdmin());
         return userDto;
     }

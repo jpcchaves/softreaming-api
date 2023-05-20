@@ -1,7 +1,6 @@
 package com.jpcchaves.softreaming.payload.dtos.rating;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jpcchaves.softreaming.entities.Rating;
 
 import java.util.Date;
 
@@ -10,13 +9,13 @@ public class LineRatingDto {
     private Double rate;
     private Long userId;
     @JsonIgnore
-    private Rating rating;
+    private RatingDto rating;
     private Date createdAt;
 
     public LineRatingDto() {
     }
 
-    public LineRatingDto(Long id, Double rate, Long userId, Rating rating, Date createdAt) {
+    public LineRatingDto(Long id, Double rate, Long userId, RatingDto rating, Date createdAt) {
         this.id = id;
         this.rate = rate;
         this.userId = userId;
@@ -48,11 +47,11 @@ public class LineRatingDto {
         this.userId = userId;
     }
 
-    public Rating getRating() {
+    public RatingDto getRating() {
         return rating;
     }
 
-    public void setRating(Rating rating) {
+    public void setRating(RatingDto rating) {
         this.rating = rating;
     }
 
