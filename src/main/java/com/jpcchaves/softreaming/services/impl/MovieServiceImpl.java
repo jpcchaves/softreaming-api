@@ -1,19 +1,14 @@
 package com.jpcchaves.softreaming.services.impl;
 
-import com.jpcchaves.softreaming.entities.Category;
-import com.jpcchaves.softreaming.entities.LineRating;
-import com.jpcchaves.softreaming.entities.Movie;
-import com.jpcchaves.softreaming.entities.Rating;
+import com.jpcchaves.softreaming.entities.*;
 import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
+import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
-import com.jpcchaves.softreaming.repositories.CategoryRepository;
-import com.jpcchaves.softreaming.repositories.LineRatingRepository;
-import com.jpcchaves.softreaming.repositories.MovieRepository;
-import com.jpcchaves.softreaming.repositories.RatingRepository;
+import com.jpcchaves.softreaming.repositories.*;
 import com.jpcchaves.softreaming.services.MovieService;
 import com.jpcchaves.softreaming.services.SecurityContextService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
@@ -38,6 +33,7 @@ public class MovieServiceImpl implements MovieService {
     private final RatingRepository ratingRepository;
     private final LineRatingRepository lineItemRepository;
     private final CategoryRepository categoryRepository;
+    private final DirectorRepository directorRepository;
     private final SecurityContextService securityContextService;
     private final MapperUtils mapper;
 
@@ -45,12 +41,14 @@ public class MovieServiceImpl implements MovieService {
                             RatingRepository ratingRepository,
                             LineRatingRepository lineItemRepository,
                             CategoryRepository categoryRepository,
+                            DirectorRepository directorRepository,
                             SecurityContextService securityContextService,
                             MapperUtils mapper) {
         this.repository = repository;
         this.ratingRepository = ratingRepository;
         this.lineItemRepository = lineItemRepository;
         this.categoryRepository = categoryRepository;
+        this.directorRepository = directorRepository;
         this.securityContextService = securityContextService;
         this.mapper = mapper;
     }
@@ -62,6 +60,19 @@ public class MovieServiceImpl implements MovieService {
             throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + requestDto.getName());
         }
 
+        List<DirectorDto> directorsToSave = new ArrayList<>();
+        for (DirectorDto director : requestDto.getDirectors()) {
+            Optional<Director> entity = directorRepository.findByFirstNameIgnoreCaseOrLastNameIgnoreCase(director.getFirstName(), director.getLastName());
+            if (entity.isEmpty()) {
+                directorRepository.save(mapper.parseObject(director, Director.class));
+            } else {
+                directorsToSave.add(director);
+            }
+        }
+
+        List<Director> directors = mapper.parseListObjects(directorsToSave, Director.class);
+        List<Director> savedDirectors = directorRepository.saveAll(directors);
+
         try {
             Set<Category> categoriesSet = new HashSet<>(categoryRepository
                     .findAllById(requestDto.getCategoriesIds()));
@@ -70,6 +81,7 @@ public class MovieServiceImpl implements MovieService {
                     Movie.class);
             movie.setCategories(categoriesSet);
 
+            movie.setDirectors(new HashSet<>(savedDirectors));
             Movie savedMovie = repository.save(movie);
 
             Rating rating = ratingRepository.save(new Rating(0.0,
@@ -278,6 +290,7 @@ public class MovieServiceImpl implements MovieService {
         movieResponseDto.setCreatedAt(movie.getCreatedAt());
         movieResponseDto.setRatings(mapper.parseObject(movie.getRatings(),
                 RatingDto.class));
+        movieResponseDto.setDirectors(mapper.parseSetObjects(movie.getDirectors(), DirectorDto.class));
 
         return movieResponseDto;
     }
