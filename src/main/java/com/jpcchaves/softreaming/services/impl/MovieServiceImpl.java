@@ -70,10 +70,14 @@ public class MovieServiceImpl implements MovieService {
             }
         }
 
-        List<Director> directors = mapper.parseListObjects(directorsToSave, Director.class);
-        List<Director> savedDirectors = directorRepository.saveAll(directors);
-
         try {
+
+            List<Director> directors = new ArrayList<>();
+            if (!directorsToSave.isEmpty()) {
+                directors = mapper.parseListObjects(directorsToSave, Director.class);
+            }
+            List<Director> savedDirectors = directorRepository.saveAll(directors);
+
             Set<Category> categoriesSet = new HashSet<>(categoryRepository
                     .findAllById(requestDto.getCategoriesIds()));
 
