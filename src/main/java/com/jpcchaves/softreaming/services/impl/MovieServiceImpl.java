@@ -17,7 +17,6 @@ import com.jpcchaves.softreaming.repositories.RatingRepository;
 import com.jpcchaves.softreaming.services.MovieService;
 import com.jpcchaves.softreaming.services.SecurityContextService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -70,12 +66,16 @@ public class MovieServiceImpl implements MovieService {
             Set<Category> categoriesSet = new HashSet<>(categoryRepository
                     .findAllById(requestDto.getCategoriesIds()));
 
-            Movie movie = mapper.parseObject(requestDto, Movie.class);
+            Movie movie = mapper.parseObject(requestDto,
+                    Movie.class);
             movie.setCategories(categoriesSet);
 
             Movie savedMovie = repository.save(movie);
 
-            Rating rating = ratingRepository.save(new Rating(0.0, 0, new Date(), savedMovie));
+            Rating rating = ratingRepository.save(new Rating(0.0,
+                    0,
+                    new Date(),
+                    savedMovie));
             savedMovie.setRatings(rating);
 
             repository.save(savedMovie);
@@ -90,28 +90,25 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponsePaginatedDto getAll(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Movie> moviesPage = repository.findAll(pageable);
 
-        List<MovieResponseMinDto> movieResponseMinDtos = mapper.parseListObjects(moviesPage.getContent(), MovieResponseMinDto.class);
+        List<MovieResponseMinDto> movieResponseMinDtos = mapper.parseListObjects(moviesPage.getContent(),
+                MovieResponseMinDto.class);
 
-        return buildMovieResponsePaginatedDto(movieResponseMinDtos, moviesPage);
+        return buildMovieResponsePaginatedDto(movieResponseMinDtos,
+                moviesPage);
     }
 
     @Override
     public MovieResponseDto getById(Long id) {
 
         Movie movie = getMovie(id);
-        MovieResponseDto movieResponseDto = new MovieResponseDto();
 
-        for (Category category : movie.getCategories()) {
-            movieResponseDto.getCategories().add(category.getCategory());
-        }
+        return buildMovieResponseDto(movie);
 
-        BeanUtils.copyProperties(movie, movieResponseDto);
-
-        return movieResponseDto;
     }
 
     @Override
-    public MovieResponseDto update(MovieRequestDto requestDto, Long id) {
+    public MovieResponseDto update(MovieRequestDto requestDto,
+                                   Long id) {
         try {
             List<Category> categories = categoryRepository
                     .findAllById(requestDto.getCategoriesIds());
@@ -119,12 +116,14 @@ public class MovieServiceImpl implements MovieService {
             Set<Category> newCategories = new HashSet<>(categories);
 
             Movie movie = getMovie(id);
-            Movie updatedMovie = updateMovie(movie, requestDto);
+            Movie updatedMovie = updateMovie(movie,
+                    requestDto);
             updatedMovie.setCategories(newCategories);
 
             Movie savedMovie = repository.save(updatedMovie);
 
-            return mapper.parseObject(savedMovie, MovieResponseDto.class);
+            return mapper.parseObject(savedMovie,
+                    MovieResponseDto.class);
         } catch (DataIntegrityViolationException ex) {
             throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
         }
@@ -138,16 +137,20 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public ApiMessageResponseDto addMovieRating(Long id, MovieRatingDto movieRatingDto) {
+    public ApiMessageResponseDto addMovieRating(Long id,
+                                                MovieRatingDto movieRatingDto) {
         Long userId = securityContextService.getCurrentLoggedUser().getId();
         Movie movie = getMovie(id);
         Rating movieRating = movie.getRatings();
 
-        if (lineItemRepository.existsByUserIdAndRating_Id(userId, movieRating.getId())) {
+        if (lineItemRepository.existsByUserIdAndRating_Id(userId,
+                movieRating.getId())) {
             throw new BadRequestException("Você já avaliou o filme: " + movie.getName());
         }
 
-        LineRating newLineRating = new LineRating(movieRatingDto.getRating(), userId, movieRating);
+        LineRating newLineRating = new LineRating(movieRatingDto.getRating(),
+                userId,
+                movieRating);
         lineItemRepository.save(newLineRating);
 
 
@@ -170,11 +173,14 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public ApiMessageResponseDto updateRating(Long id, Long ratingId, MovieRatingDto movieRatingDto) {
+    public ApiMessageResponseDto updateRating(Long id,
+                                              Long ratingId,
+                                              MovieRatingDto movieRatingDto) {
         Long userId = securityContextService.getCurrentLoggedUser().getId();
 
         LineRating lineRating = lineItemRepository
-                .findByUserIdAndId(userId, ratingId)
+                .findByUserIdAndId(userId,
+                        ratingId)
                 .orElseThrow(() -> new BadRequestException("Ocorreu um erro ao editar sua avaliação. Verifique os dados e tente novamente"));
 
         lineRating.setRate(movieRatingDto.getRating());
@@ -207,7 +213,8 @@ public class MovieServiceImpl implements MovieService {
         Movie movie = getMovie(movieId);
         Rating movieRating = movie.getRatings();
 
-        return mapper.parseObject(movieRating, RatingDto.class);
+        return mapper.parseObject(movieRating,
+                RatingDto.class);
     }
 
     @Override
@@ -221,22 +228,64 @@ public class MovieServiceImpl implements MovieService {
         }
 
         if (releaseDate != null && name != null) {
-            Page<Movie> moviePage = repository.findByNameContainingIgnoreCaseAndReleaseDate(pageable, name, releaseDate);
+            Page<Movie> moviePage = repository.findByNameContainingIgnoreCaseAndReleaseDate(pageable,
+                    name,
+                    releaseDate);
             return getMovieResponsePaginatedDto(moviePage);
         }
 
         Page<Movie> moviePage;
         if (releaseDate != null) {
-            moviePage = repository.findByReleaseDate(pageable, releaseDate);
+            moviePage = repository.findByReleaseDate(pageable,
+                    releaseDate);
         } else {
-            moviePage = repository.findByNameContainingIgnoreCase(pageable, name);
+            moviePage = repository.findByNameContainingIgnoreCase(pageable,
+                    name);
         }
         return getMovieResponsePaginatedDto(moviePage);
     }
 
+    @Override
+    public List<MovieByBestRatedDto> sortByBestRating() {
+        List<Movie> movieList = repository.findTop10ByOrderByRatings_RatingDesc();
+        List<MovieByBestRatedDto> bestRatedDtos = new ArrayList<>();
+
+        for (Movie movie : movieList) {
+            bestRatedDtos.add(new MovieByBestRatedDto(mapper.parseObject(movie, MovieResponseMinDto.class),
+                    movie.getRatings().getRating(),
+                    movie.getRatings().getRatingsAmount())
+            );
+        }
+
+        return bestRatedDtos;
+    }
+
+    private MovieResponseDto buildMovieResponseDto(Movie movie) {
+        MovieResponseDto movieResponseDto = new MovieResponseDto();
+
+        for (Category category : movie.getCategories()) {
+            movieResponseDto.getCategories().add(category.getCategory());
+        }
+
+        movieResponseDto.setId(movie.getId());
+        movieResponseDto.setName(movie.getName());
+        movieResponseDto.setShortDescription(movie.getShortDescription());
+        movieResponseDto.setLongDescription(movie.getLongDescription());
+        movieResponseDto.setDuration(movie.getDuration());
+        movieResponseDto.setReleaseDate(movie.getReleaseDate());
+        movieResponseDto.setMovieUrl(movie.getMovieUrl());
+        movieResponseDto.setPosterUrl(movie.getPosterUrl());
+        movieResponseDto.setCreatedAt(movie.getCreatedAt());
+        movieResponseDto.setRatings(mapper.parseObject(movie.getRatings(),
+                RatingDto.class));
+
+        return movieResponseDto;
+    }
+
     private MovieResponsePaginatedDto getMovieResponsePaginatedDto(Page<Movie> moviePage) {
         MovieResponsePaginatedDto response = new MovieResponsePaginatedDto();
-        response.setContent(mapper.parseListObjects(moviePage.getContent(), MovieResponseMinDto.class));
+        response.setContent(mapper.parseListObjects(moviePage.getContent(),
+                MovieResponseMinDto.class));
         response.setPageNo(moviePage.getNumber());
         response.setPageSize(moviePage.getSize());
         response.setTotalElements(moviePage.getTotalElements());
@@ -251,7 +300,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     private Double formatRating(Double rating) {
-        BigDecimal bd = new BigDecimal(rating).setScale(TWO, RoundingMode.HALF_EVEN);
+        BigDecimal bd = new BigDecimal(rating).setScale(TWO,
+                RoundingMode.HALF_EVEN);
         return bd.doubleValue();
     }
 
@@ -275,7 +325,8 @@ public class MovieServiceImpl implements MovieService {
         movie.setDuration(requestDto.getDuration());
         movie.setMovieUrl(requestDto.getMovieUrl());
         movie.setPosterUrl(requestDto.getPosterUrl());
-        movie.setCategories(mapper.parseSetObjects(requestDto.getCategories(), Category.class));
+        movie.setCategories(mapper.parseSetObjects(requestDto.getCategories(),
+                Category.class));
         return movie;
     }
 
@@ -285,7 +336,8 @@ public class MovieServiceImpl implements MovieService {
                 .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado"));
     }
 
-    private MovieResponsePaginatedDto buildMovieResponsePaginatedDto(List<MovieResponseMinDto> moviesResponse, Page<Movie> moviePage) {
+    private MovieResponsePaginatedDto buildMovieResponsePaginatedDto(List<MovieResponseMinDto> moviesResponse,
+                                                                     Page<Movie> moviePage) {
         MovieResponsePaginatedDto moviePaginated = new MovieResponsePaginatedDto();
 
         moviePaginated.setContent(moviesResponse);
