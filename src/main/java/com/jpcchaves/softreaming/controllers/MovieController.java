@@ -1,10 +1,7 @@
 package com.jpcchaves.softreaming.controllers;
 
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieRatingDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieRequestDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponsePaginatedDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import com.jpcchaves.softreaming.services.impl.MovieServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/movies")
@@ -103,8 +102,10 @@ public class MovieController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<MovieResponseDto> update(@PathVariable("id") Long id, @RequestBody MovieRequestDto movieDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.update(movieDto, id));
+    public ResponseEntity<MovieResponseDto> update(@PathVariable("id") Long id,
+                                                   @RequestBody MovieRequestDto movieDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.update(movieDto,
+                id));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -140,8 +141,10 @@ public class MovieController {
             }
     )
     @PatchMapping("/{id}/rating")
-    public ResponseEntity<ApiMessageResponseDto> addRating(@PathVariable("id") Long id, @Valid @RequestBody MovieRatingDto movieRatingDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.addMovieRating(id, movieRatingDto));
+    public ResponseEntity<ApiMessageResponseDto> addRating(@PathVariable("id") Long id,
+                                                           @Valid @RequestBody MovieRatingDto movieRatingDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.addMovieRating(id,
+                movieRatingDto));
     }
 
     @Operation(summary = "Gets a rating list of a movie",
@@ -181,7 +184,9 @@ public class MovieController {
     public ResponseEntity<ApiMessageResponseDto> updateRating(@PathVariable("id") Long id,
                                                               @PathVariable("ratingId") Long ratingId,
                                                               @Valid @RequestBody MovieRatingDto movieRatingDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.updateRating(id, ratingId, movieRatingDto));
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateRating(id,
+                ratingId,
+                movieRatingDto));
     }
 
     @Operation(summary = "Filter movies",
@@ -203,6 +208,14 @@ public class MovieController {
             @RequestParam(value = "releaseDate", required = false) String releaseDate,
             @RequestParam(value = "name", required = false) String name,
             Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.filterBy(pageable, releaseDate, name));
+        return ResponseEntity.status(HttpStatus.OK).body(service.filterBy(pageable,
+                releaseDate,
+                name));
     }
+
+    @GetMapping("/best-rated")
+    public ResponseEntity<List<MovieByBestRatedDto>> filterByBestRated() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.sortByBestRating());
+    }
+
 }
