@@ -274,15 +274,27 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public ApiMessageResponseDto addMovieCategory(Long id,
-                                                  CategoryRequestDto categoryRequestDto) {
+    public ApiMessageResponseDto addCategory(Long id,
+                                             CategoryRequestDto categoryRequestDto) {
         Movie movie = getMovie(id);
         List<Category> categories = categoryRepository.findAllById(categoryRequestDto.getCategoryIds());
 
         movie.getCategories().addAll(categories);
 
         repository.save(movie);
-        return new ApiMessageResponseDto("Categoria adicionada com sucesso");
+        return new ApiMessageResponseDto("Categoria(s) adicionada(s) com sucesso");
+    }
+
+    @Override
+    public ApiMessageResponseDto removeCategory(Long id,
+                                                CategoryRequestDto categoryRequestDto) {
+        Movie movie = getMovie(id);
+        List<Category> categories = categoryRepository.findAllById(categoryRequestDto.getCategoryIds());
+
+        categories.forEach(movie.getCategories()::remove);
+
+        repository.save(movie);
+        return new ApiMessageResponseDto("Categoria(s) removida(s) com sucesso");
     }
 
     private MovieResponseDto buildMovieResponseDto(Movie movie) {

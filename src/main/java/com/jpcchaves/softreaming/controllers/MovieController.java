@@ -164,7 +164,28 @@ public class MovieController {
     @PatchMapping("/{id}/add-category")
     public ResponseEntity<ApiMessageResponseDto> addCategory(@PathVariable("id") Long id,
                                                              @RequestBody CategoryRequestDto categoryRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.addMovieCategory(id,
+        return ResponseEntity.status(HttpStatus.OK).body(service.addCategory(id,
+                categoryRequestDto));
+    }
+
+    @Operation(summary = "Removes a movie category",
+            description = "Removes a movie category by passing a movie ID and a List with the categories IDs",
+            tags = {"Movie"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    schema = @Schema(implementation = ApiMessageResponseDto.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
+    @PatchMapping("/{id}/remove-category")
+    public ResponseEntity<ApiMessageResponseDto> removeCategory(@PathVariable("id") Long id,
+                                                                @RequestBody CategoryRequestDto categoryRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.removeCategory(id,
                 categoryRequestDto));
     }
 

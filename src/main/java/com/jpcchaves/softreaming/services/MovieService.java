@@ -34,6 +34,9 @@ public interface MovieService {
 
     List<MovieByBestRatedDto> sortByBestRating();
 
-    ApiMessageResponseDto addMovieCategory(Long id,
-                                           CategoryRequestDto categoryRequestDto);
+    ApiMessageResponseDto addCategory(Long id,
+                                      CategoryRequestDto categoryRequestDto);
+
+    ApiMessageResponseDto removeCategory(Long id,
+                                         CategoryRequestDto categoryRequestDto);
 }
