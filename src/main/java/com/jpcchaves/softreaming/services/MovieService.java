@@ -33,4 +33,7 @@ public interface MovieService {
                                        String name);
 
     List<MovieByBestRatedDto> sortByBestRating();
+
+    ApiMessageResponseDto addMovieCategory(Long id,
+                                           CategoryRequestDto categoryRequestDto);
 }

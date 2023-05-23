@@ -273,6 +273,18 @@ public class MovieServiceImpl implements MovieService {
         return bestRatedDtos;
     }
 
+    @Override
+    public ApiMessageResponseDto addMovieCategory(Long id,
+                                                  CategoryRequestDto categoryRequestDto) {
+        Movie movie = getMovie(id);
+        List<Category> categories = categoryRepository.findAllById(categoryRequestDto.getCategoryIds());
+
+        movie.getCategories().addAll(categories);
+
+        repository.save(movie);
+        return new ApiMessageResponseDto("Categoria adicionada com sucesso");
+    }
+
     private MovieResponseDto buildMovieResponseDto(Movie movie) {
         MovieResponseDto movieResponseDto = new MovieResponseDto();
 
