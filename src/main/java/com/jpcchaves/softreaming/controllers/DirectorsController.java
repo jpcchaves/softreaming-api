@@ -3,6 +3,7 @@ package com.jpcchaves.softreaming.controllers;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsPaginatedDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.services.DirectorsService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/directors")
@@ -32,6 +35,12 @@ public class DirectorsController {
     public ResponseEntity<DirectorDto> getById(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getById(id));
     }
+
+    @GetMapping("/{id}/movies")
+    public ResponseEntity<Set<MovieResponseMinDto>> getAllMoviesByDirector(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getAllMoviesByDirector(id));
+    }
+
 
     @PostMapping
     public ResponseEntity<ApiMessageResponseDto> create(@RequestBody DirectorDto directorDto) {
