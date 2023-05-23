@@ -213,6 +213,20 @@ public class MovieController {
                 name));
     }
 
+    @Operation(summary = "Gets the 10 best rated movies",
+            description = "Gets a list of the 10 best rated movies",
+            tags = {"Movie"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    array = @ArraySchema(schema = @Schema(implementation = MovieByBestRatedDto.class))
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @GetMapping("/best-rated")
     public ResponseEntity<List<MovieByBestRatedDto>> filterByBestRated() {
         return ResponseEntity.status(HttpStatus.OK).body(service.sortByBestRating());
