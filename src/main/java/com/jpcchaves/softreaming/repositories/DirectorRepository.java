@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface DirectorRepository extends JpaRepository<Director, Long> {
 
-    Optional<Director> findByFirstNameIgnoreCaseOrLastNameIgnoreCase(String firstName,
-                                                                     String lastName);
+    Optional<Director> findByFirstNameIgnoreCaseAndLastNameIgnoreCase(String firstName,
+                                                                      String lastName);
 }

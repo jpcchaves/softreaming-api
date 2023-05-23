@@ -60,32 +60,29 @@ public class MovieServiceImpl implements MovieService {
             throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + requestDto.getName());
         }
 
-        List<DirectorDto> directorsToSave = new ArrayList<>();
-        for (DirectorDto director : requestDto.getDirectors()) {
-            Optional<Director> entity = directorRepository.findByFirstNameIgnoreCaseOrLastNameIgnoreCase(director.getFirstName(), director.getLastName());
-            if (entity.isEmpty()) {
-                directorRepository.save(mapper.parseObject(director, Director.class));
+        List<Director> directorsToSave = new ArrayList<>();
+        for (DirectorDto directorDto : requestDto.getDirectors()) {
+            Optional<Director> director = directorRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(directorDto.getFirstName(), directorDto.getLastName());
+
+            if (director.isEmpty()) {
+                Director savedDirector = directorRepository.save(mapper.parseObject(directorDto, Director.class));
+                directorsToSave.add(savedDirector);
             } else {
-                directorsToSave.add(director);
+                directorsToSave.add(director.get());
             }
         }
 
+        directorRepository.saveAll(directorsToSave);
+
         try {
-
-            List<Director> directors = new ArrayList<>();
-            if (!directorsToSave.isEmpty()) {
-                directors = mapper.parseListObjects(directorsToSave, Director.class);
-            }
-            List<Director> savedDirectors = directorRepository.saveAll(directors);
-
             Set<Category> categoriesSet = new HashSet<>(categoryRepository
                     .findAllById(requestDto.getCategoriesIds()));
 
             Movie movie = mapper.parseObject(requestDto,
                     Movie.class);
             movie.setCategories(categoriesSet);
+            movie.setDirectors(new HashSet<>(directorsToSave));
 
-            movie.setDirectors(new HashSet<>(savedDirectors));
             Movie savedMovie = repository.save(movie);
 
             Rating rating = ratingRepository.save(new Rating(0.0,
