@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.payload.dtos.movie;
 
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
+import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ public class MovieRequestDto {
     private String posterUrl;
     private Date createdAt;
     private Set<CategoryDto> categories = new HashSet<>();
+    private Set<DirectorDto> directors = new HashSet<>();
 
     public MovieRequestDto() {
     }
@@ -33,7 +35,8 @@ public class MovieRequestDto {
                            String movieUrl,
                            String posterUrl,
                            Date createdAt,
-                           Set<CategoryDto> categories) {
+                           Set<CategoryDto> categories,
+                           Set<DirectorDto> directors) {
         this.id = id;
         this.categoriesIds = categoriesIds;
         this.name = name;
@@ -45,6 +48,7 @@ public class MovieRequestDto {
         this.posterUrl = posterUrl;
         this.createdAt = createdAt;
         this.categories = categories;
+        this.directors = directors;
     }
 
     public Long getId() {
@@ -133,5 +137,13 @@ public class MovieRequestDto {
 
     public void setCategories(Set<CategoryDto> categories) {
         this.categories = categories;
+    }
+
+    public Set<DirectorDto> getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(Set<DirectorDto> directors) {
+        this.directors = directors;
     }
 }

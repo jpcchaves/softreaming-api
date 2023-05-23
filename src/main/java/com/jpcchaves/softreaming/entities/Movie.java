@@ -16,20 +16,28 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false, unique = true)
     private String name;
+
     @Column(nullable = false)
     private String shortDescription;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String longDescription;
+
     @Column(nullable = false)
     private String duration;
+
     @Column(nullable = false)
     private String releaseDate;
+
     @Column(nullable = false)
     private String movieUrl;
+
     @Column(nullable = false)
     private String posterUrl;
+
     @CreatedDate
     private Date createdAt;
 
@@ -44,6 +52,17 @@ public class Movie {
     )
     @JsonIgnore
     private Set<Category> categories = new HashSet<>();
+
+    @ManyToMany(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.DETACH
+    )
+    @JoinTable(
+            name = "movies_directors",
+            joinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id")
+    )
+    private Set<Director> directors = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinTable(
@@ -71,6 +90,7 @@ public class Movie {
                  String posterUrl,
                  Date createdAt,
                  Set<Category> categories,
+                 Set<Director> directors,
                  Rating ratings) {
         this.id = id;
         this.name = name;
@@ -82,6 +102,7 @@ public class Movie {
         this.posterUrl = posterUrl;
         this.createdAt = createdAt;
         this.categories = categories;
+        this.directors = directors;
         this.ratings = ratings;
     }
 
@@ -171,6 +192,14 @@ public class Movie {
 
     public void setRatings(Rating ratings) {
         this.ratings = ratings;
+    }
+
+    public Set<Director> getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(Set<Director> directors) {
+        this.directors = directors;
     }
 
     @Override
