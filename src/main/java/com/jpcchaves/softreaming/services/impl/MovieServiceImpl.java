@@ -6,6 +6,7 @@ import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
+import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import com.jpcchaves.softreaming.repositories.*;
@@ -295,6 +296,41 @@ public class MovieServiceImpl implements MovieService {
 
         repository.save(movie);
         return new ApiMessageResponseDto("Categoria(s) removida(s) com sucesso");
+    }
+
+    @Override
+    public ApiMessageResponseDto addDirector(Long id,
+                                             List<DirectorDto> directorDtos) {
+        Movie movie = getMovie(id);
+
+        for (DirectorDto directorDto : directorDtos) {
+            Optional<Director> director = directorRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(directorDto.getFirstName(), directorDto.getLastName());
+
+            if (director.isPresent()) {
+                movie.getDirectors().add(director.get());
+            } else {
+                Director savedDirector = directorRepository.save(mapper.parseObject(directorDto, Director.class));
+                movie.getDirectors().add(savedDirector);
+            }
+        }
+
+        repository.save(movie);
+
+        return new ApiMessageResponseDto("Diretor(es) adicionado(s) com sucesso");
+    }
+
+    @Override
+    public ApiMessageResponseDto removeDirector(Long id,
+                                                DirectorsIdsDtos directorsIdsDtos) {
+        Movie movie = getMovie(id);
+
+        for (Long directorId : directorsIdsDtos.getDirectorIds()) {
+            movie.getDirectors().removeIf(director -> Objects.equals(director.getId(), directorId));
+        }
+
+        repository.save(movie);
+
+        return new ApiMessageResponseDto("Diretor(es) removido(s) com sucesso");
     }
 
     private MovieResponseDto buildMovieResponseDto(Movie movie) {
