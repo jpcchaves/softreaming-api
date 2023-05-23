@@ -1,10 +1,13 @@
 package com.jpcchaves.softreaming.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -28,8 +31,6 @@ public class User implements UserDetails {
     private String password;
     private Boolean isAdmin;
 
-    // FetchType.EAGER -> means that when user is loaded, his role will be retrieved too
-    // CascadeType.ALL -> means that when user is saved, his role will be saved too
     @ManyToMany(
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL
@@ -44,6 +45,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Profile> profiles;
 
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
     public User() {
     }
 
@@ -54,7 +61,10 @@ public class User implements UserDetails {
                 String password,
                 Boolean isAdmin,
                 List<Profile> profiles,
-                Set<Role> roles) {
+                Set<Role> roles,
+                LocalDateTime createdAt,
+                LocalDateTime updatedAt
+    ) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -63,6 +73,8 @@ public class User implements UserDetails {
         this.isAdmin = isAdmin;
         this.profiles = profiles;
         this.roles = roles;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getId() {
@@ -165,5 +177,21 @@ public class User implements UserDetails {
 
     public void setProfiles(List<Profile> profiles) {
         this.profiles = profiles;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
