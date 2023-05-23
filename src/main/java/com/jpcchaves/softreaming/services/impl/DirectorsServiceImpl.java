@@ -4,12 +4,13 @@ import com.jpcchaves.softreaming.entities.Director;
 import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
+import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsPaginatedDto;
 import com.jpcchaves.softreaming.repositories.DirectorRepository;
 import com.jpcchaves.softreaming.services.DirectorsService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class DirectorsServiceImpl implements DirectorsService {
@@ -30,9 +31,18 @@ public class DirectorsServiceImpl implements DirectorsService {
     }
 
     @Override
-    public List<DirectorDto> getAll() {
-        List<Director> directors = directorRepository.findAll();
-        return mapper.parseListObjects(directors, DirectorDto.class);
+    public DirectorsPaginatedDto getAll(Pageable pageable) {
+        Page<Director> directors = directorRepository.findAll(pageable);
+        DirectorsPaginatedDto directorsPaginatedDto = new DirectorsPaginatedDto();
+
+        directorsPaginatedDto.setContent(mapper.parseListObjects(directors.getContent(), DirectorDto.class));
+        directorsPaginatedDto.setPageNo(directors.getNumber());
+        directorsPaginatedDto.setPageSize(directors.getSize());
+        directorsPaginatedDto.setTotalElements(directors.getTotalElements());
+        directorsPaginatedDto.setTotalPages(directors.getTotalPages());
+        directorsPaginatedDto.setLast(directors.isLast());
+
+        return directorsPaginatedDto;
     }
 
     @Override
