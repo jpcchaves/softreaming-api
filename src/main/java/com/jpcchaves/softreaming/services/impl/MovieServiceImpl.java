@@ -101,7 +101,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponsePaginatedDto getAll(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
+    public MovieResponsePaginatedDto<?> getAll(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Movie> moviesPage = repository.findAll(pageable);
 
         List<MovieResponseMinDto> movieResponseMinDtos = mapper.parseListObjects(moviesPage.getContent(),
@@ -232,10 +232,10 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponsePaginatedDto filterBy(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC)
-                                              Pageable pageable,
-                                              String releaseDate,
-                                              String name) {
+    public MovieResponsePaginatedDto<?> filterBy(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC)
+                                                 Pageable pageable,
+                                                 String releaseDate,
+                                                 String name) {
 
         if (releaseDate == null && name == null) {
             throw new BadRequestException("Informe ao menos um filtro para conseguir realizar a busca");
@@ -245,7 +245,7 @@ public class MovieServiceImpl implements MovieService {
             Page<Movie> moviePage = repository.findByNameContainingIgnoreCaseAndReleaseDate(pageable,
                     name,
                     releaseDate);
-            return getMovieResponsePaginatedDto(moviePage);
+            return getMovieResponsePaginatedDto(moviePage, MovieResponseMinDto.class);
         }
 
         Page<Movie> moviePage;
@@ -256,22 +256,14 @@ public class MovieServiceImpl implements MovieService {
             moviePage = repository.findByNameContainingIgnoreCase(pageable,
                     name);
         }
-        return getMovieResponsePaginatedDto(moviePage);
+        return getMovieResponsePaginatedDto(moviePage, MovieRatingDto.class);
     }
 
     @Override
     public List<MovieByBestRatedDto> sortByBestRating() {
         List<Movie> movieList = repository.findTop10ByOrderByRatings_RatingDesc();
-        List<MovieByBestRatedDto> bestRatedDtos = new ArrayList<>();
 
-        for (Movie movie : movieList) {
-            bestRatedDtos.add(new MovieByBestRatedDto(mapper.parseObject(movie, MovieResponseMinDto.class),
-                    movie.getRatings().getRating(),
-                    movie.getRatings().getRatingsAmount())
-            );
-        }
-
-        return bestRatedDtos;
+        return buildBestRatedDtos(movieList);
     }
 
     @Override
@@ -334,12 +326,27 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponsePaginatedDto filterByRatingGreaterThan(Pageable pageable,
-                                                               Double rating) {
+    public MovieResponsePaginatedDto<?> filterByRatingGreaterThan(Pageable pageable,
+                                                                  Double rating) {
         Page<Movie> movies = repository.findByRatings_RatingGreaterThanEqual(pageable, rating);
-        return buildMovieResponsePaginatedDto(mapper.parseListObjects(movies.getContent(), MovieResponseMinDto.class), movies);
+        List<MovieByBestRatedDto> movieByBestRatedDto = buildBestRatedDtos(movies.getContent());
+
+        return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
     }
-    
+
+    private List<MovieByBestRatedDto> buildBestRatedDtos(List<Movie> movieList) {
+        List<MovieByBestRatedDto> bestRatedDtos = new ArrayList<>();
+
+        for (Movie movie : movieList) {
+            bestRatedDtos.add(new MovieByBestRatedDto(mapper.parseObject(movie, MovieResponseMinDto.class),
+                    movie.getRatings().getRating(),
+                    movie.getRatings().getRatingsAmount())
+            );
+        }
+
+        return bestRatedDtos;
+    }
+
     private MovieResponseDto buildMovieResponseDto(Movie movie) {
         MovieResponseDto movieResponseDto = new MovieResponseDto();
 
@@ -363,10 +370,10 @@ public class MovieServiceImpl implements MovieService {
         return movieResponseDto;
     }
 
-    private MovieResponsePaginatedDto getMovieResponsePaginatedDto(Page<Movie> moviePage) {
-        MovieResponsePaginatedDto response = new MovieResponsePaginatedDto();
-        response.setContent(mapper.parseListObjects(moviePage.getContent(),
-                MovieResponseMinDto.class));
+    private <T> MovieResponsePaginatedDto<T> getMovieResponsePaginatedDto(Page<Movie> moviePage,
+                                                                          Class<T> destObj) {
+        MovieResponsePaginatedDto<T> response = new MovieResponsePaginatedDto<>();
+        response.setContent(mapper.parseListObjects(moviePage.getContent(), destObj));
         response.setPageNo(moviePage.getNumber());
         response.setPageSize(moviePage.getSize());
         response.setTotalElements(moviePage.getTotalElements());
@@ -417,9 +424,9 @@ public class MovieServiceImpl implements MovieService {
                 .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado"));
     }
 
-    private MovieResponsePaginatedDto buildMovieResponsePaginatedDto(List<MovieResponseMinDto> moviesResponse,
-                                                                     Page<Movie> moviePage) {
-        MovieResponsePaginatedDto moviePaginated = new MovieResponsePaginatedDto();
+    private <T> MovieResponsePaginatedDto<?> buildMovieResponsePaginatedDto(List<T> moviesResponse,
+                                                                            Page<Movie> moviePage) {
+        MovieResponsePaginatedDto<T> moviePaginated = new MovieResponsePaginatedDto<>();
 
         moviePaginated.setContent(moviesResponse);
         moviePaginated.setPageNo(moviePage.getNumber());

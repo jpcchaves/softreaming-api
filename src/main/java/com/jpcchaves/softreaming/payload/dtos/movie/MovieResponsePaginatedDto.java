@@ -3,8 +3,8 @@ package com.jpcchaves.softreaming.payload.dtos.movie;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieResponsePaginatedDto {
-    private List<MovieResponseMinDto> content = new ArrayList<>();
+public class MovieResponsePaginatedDto<T> {
+    private List<T> content = new ArrayList<>();
     private int pageNo;
     private int pageSize;
     private long totalElements;
@@ -14,7 +14,12 @@ public class MovieResponsePaginatedDto {
     public MovieResponsePaginatedDto() {
     }
 
-    public MovieResponsePaginatedDto(List<MovieResponseMinDto> content, int pageNo, int pageSize, long totalElements, int totalPages, boolean last) {
+    public MovieResponsePaginatedDto(List<T> content,
+                                     int pageNo,
+                                     int pageSize,
+                                     long totalElements,
+                                     int totalPages,
+                                     boolean last) {
         this.content = content;
         this.pageNo = pageNo;
         this.pageSize = pageSize;
@@ -23,11 +28,11 @@ public class MovieResponsePaginatedDto {
         this.last = last;
     }
 
-    public List<MovieResponseMinDto> getContent() {
+    public List<T> getContent() {
         return content;
     }
 
-    public void setContent(List<MovieResponseMinDto> content) {
+    public void setContent(List<T> content) {
         this.content = content;
     }
 
