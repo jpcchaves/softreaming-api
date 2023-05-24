@@ -1,5 +1,6 @@
 package com.jpcchaves.softreaming.payload.dtos.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jpcchaves.softreaming.payload.dtos.auth.RoleDto;
 
 import java.util.Set;
@@ -10,6 +11,7 @@ public class UserDto {
     private String username;
     private String email;
     private Boolean isAdmin;
+    @JsonIgnore
     private Set<RoleDto> roles;
 
     public UserDto() {
