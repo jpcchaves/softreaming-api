@@ -255,6 +255,20 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(service.sortByBestRating());
     }
 
+    @Operation(summary = "Gets movie list based on the rating parameter",
+            description = "By passing a rating as a url parameter, you will get all movies that have the same rating or greater than the specified",
+            tags = {"Movie"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    schema = @Schema(implementation = MovieResponsePaginatedDto.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @GetMapping("/filter/rating")
     public ResponseEntity<MovieResponsePaginatedDto<?>> filterByRatingGreaterThan(@RequestParam(value = "rating") Double rating,
                                                                                   Pageable pageable) {
