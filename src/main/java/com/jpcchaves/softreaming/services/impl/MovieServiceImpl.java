@@ -333,6 +333,13 @@ public class MovieServiceImpl implements MovieService {
         return new ApiMessageResponseDto("Diretor(es) removido(s) com sucesso");
     }
 
+    @Override
+    public MovieResponsePaginatedDto filterByRatingGreaterThan(Pageable pageable,
+                                                               Double rating) {
+        Page<Movie> movies = repository.findByRatings_RatingGreaterThanEqual(pageable, rating);
+        return buildMovieResponsePaginatedDto(mapper.parseListObjects(movies.getContent(), MovieResponseMinDto.class), movies);
+    }
+    
     private MovieResponseDto buildMovieResponseDto(Movie movie) {
         MovieResponseDto movieResponseDto = new MovieResponseDto();
 

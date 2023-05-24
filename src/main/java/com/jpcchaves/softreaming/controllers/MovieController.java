@@ -255,6 +255,12 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(service.sortByBestRating());
     }
 
+    @GetMapping("/filter/rating")
+    public ResponseEntity<MovieResponsePaginatedDto> filterByRatingGreaterThan(@RequestParam(value = "rating") Double rating,
+                                                                               Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.filterByRatingGreaterThan(pageable, rating));
+    }
+
     @Operation(summary = "Adds a movie rating",
             description = "Adds a movie rating by passing a movie ID and a JSON representation of the rating",
             tags = {"Movie - Rating"},

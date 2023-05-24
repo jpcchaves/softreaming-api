@@ -48,4 +48,7 @@ public interface MovieService {
 
     ApiMessageResponseDto removeDirector(Long id,
                                          DirectorsIdsDtos directorsIdsDtos);
+
+    MovieResponsePaginatedDto filterByRatingGreaterThan(Pageable pageable,
+                                                        Double rating);
 }
