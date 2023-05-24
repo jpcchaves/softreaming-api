@@ -245,7 +245,9 @@ public class MovieServiceImpl implements MovieService {
             Page<Movie> moviePage = repository.findByNameContainingIgnoreCaseAndReleaseDate(pageable,
                     name,
                     releaseDate);
-            return getMovieResponsePaginatedDto(moviePage, MovieResponseMinDto.class);
+            List<MovieByBestRatedDto> movieByBestRatedDto = buildBestRatedDtos(moviePage.getContent());
+
+            return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviePage);
         }
 
         Page<Movie> moviePage;
@@ -256,7 +258,9 @@ public class MovieServiceImpl implements MovieService {
             moviePage = repository.findByNameContainingIgnoreCase(pageable,
                     name);
         }
-        return getMovieResponsePaginatedDto(moviePage, MovieRatingDto.class);
+        List<MovieByBestRatedDto> movieByBestRatedDto = buildBestRatedDtos(moviePage.getContent());
+
+        return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviePage);
     }
 
     @Override
@@ -368,19 +372,6 @@ public class MovieServiceImpl implements MovieService {
         movieResponseDto.setDirectors(mapper.parseSetObjects(movie.getDirectors(), DirectorDto.class));
 
         return movieResponseDto;
-    }
-
-    private <T> MovieResponsePaginatedDto<T> getMovieResponsePaginatedDto(Page<Movie> moviePage,
-                                                                          Class<T> destObj) {
-        MovieResponsePaginatedDto<T> response = new MovieResponsePaginatedDto<>();
-        response.setContent(mapper.parseListObjects(moviePage.getContent(), destObj));
-        response.setPageNo(moviePage.getNumber());
-        response.setPageSize(moviePage.getSize());
-        response.setTotalElements(moviePage.getTotalElements());
-        response.setTotalPages(moviePage.getTotalPages());
-        response.setLast(moviePage.isLast());
-
-        return response;
     }
 
     private Boolean hasMoreThanOneRating(Integer ratingsAmount) {
