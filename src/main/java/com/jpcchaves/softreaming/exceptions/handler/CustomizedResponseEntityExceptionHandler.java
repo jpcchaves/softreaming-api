@@ -8,6 +8,7 @@ import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     static Logger logger = Logger.getLogger("Exception");
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {
+    public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex,
+                                                                       WebRequest request) {
         logger.severe("Error: " + ex.getClass() + " Message: " + ex.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
@@ -32,7 +34,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleResourceNotFoundException(Exception ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleResourceNotFoundException(Exception ex,
+                                                                             WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
 
@@ -40,7 +43,17 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ExceptionResponse> handleResourceNotFoundException(BadRequestException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleResourceNotFoundException(BadRequestException ex,
+                                                                             WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ExceptionResponse> handleBadCredentialsException(BadCredentialsException ex,
+                                                                           WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
 
@@ -48,7 +61,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ExceptionResponse> handleResourceNotFoundException(DataIntegrityViolationException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleResourceNotFoundException(DataIntegrityViolationException ex,
+                                                                             WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
 
@@ -56,7 +70,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex,
+                                                                         WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
 
@@ -64,7 +79,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(IllegalArgumentException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(IllegalArgumentException ex,
+                                                                         WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
 
@@ -72,7 +88,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(UnsupportedOperationException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(UnsupportedOperationException ex,
+                                                                         WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
 
@@ -80,7 +97,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     }
 
     @ExceptionHandler(PropertyReferenceException.class)
-    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(PropertyReferenceException ex, WebRequest request) {
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(PropertyReferenceException ex,
+                                                                         WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
 
