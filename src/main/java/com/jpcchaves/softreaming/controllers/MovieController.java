@@ -65,7 +65,7 @@ public class MovieController {
             }
     )
     @GetMapping
-    public ResponseEntity<MovieResponsePaginatedDto> getAll(Pageable pageable) {
+    public ResponseEntity<MovieResponsePaginatedDto<?>> getAll(Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAll(pageable));
     }
 
@@ -143,7 +143,7 @@ public class MovieController {
             }
     )
     @GetMapping("/filter")
-    public ResponseEntity<MovieResponsePaginatedDto> filterMoviesByReleaseDate(
+    public ResponseEntity<MovieResponsePaginatedDto<?>> filterMoviesByReleaseDate(
             @RequestParam(value = "releaseDate", required = false) String releaseDate,
             @RequestParam(value = "name", required = false) String name,
             Pageable pageable) {
@@ -256,8 +256,8 @@ public class MovieController {
     }
 
     @GetMapping("/filter/rating")
-    public ResponseEntity<MovieResponsePaginatedDto> filterByRatingGreaterThan(@RequestParam(value = "rating") Double rating,
-                                                                               Pageable pageable) {
+    public ResponseEntity<MovieResponsePaginatedDto<?>> filterByRatingGreaterThan(@RequestParam(value = "rating") Double rating,
+                                                                                  Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(service.filterByRatingGreaterThan(pageable, rating));
     }
 

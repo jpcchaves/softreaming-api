@@ -12,7 +12,7 @@ import java.util.List;
 public interface MovieService {
     ApiMessageResponseDto create(MovieRequestDto requestDto);
 
-    MovieResponsePaginatedDto getAll(Pageable pageable);
+    MovieResponsePaginatedDto<?> getAll(Pageable pageable);
 
     MovieResponseDto getById(Long id);
 
@@ -30,9 +30,9 @@ public interface MovieService {
 
     RatingDto getMovieRating(Long movieId);
 
-    MovieResponsePaginatedDto filterBy(Pageable pageable,
-                                       String releaseDate,
-                                       String name);
+    MovieResponsePaginatedDto<?> filterBy(Pageable pageable,
+                                          String releaseDate,
+                                          String name);
 
     List<MovieByBestRatedDto> sortByBestRating();
 
@@ -49,6 +49,6 @@ public interface MovieService {
     ApiMessageResponseDto removeDirector(Long id,
                                          DirectorsIdsDtos directorsIdsDtos);
 
-    MovieResponsePaginatedDto filterByRatingGreaterThan(Pageable pageable,
-                                                        Double rating);
+    MovieResponsePaginatedDto<?> filterByRatingGreaterThan(Pageable pageable,
+                                                           Double rating);
 }
