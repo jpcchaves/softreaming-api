@@ -103,12 +103,8 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieResponsePaginatedDto<?> getAll(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Movie> moviesPage = repository.findAll(pageable);
-
-        List<MovieResponseMinDto> movieResponseMinDtos = mapper.parseListObjects(moviesPage.getContent(),
-                MovieResponseMinDto.class);
-
-        return buildMovieResponsePaginatedDto(movieResponseMinDtos,
-                moviesPage);
+        List<MovieByBestRatedDto> movieByBestRatedDto = buildBestRatedDtos(moviesPage.getContent());
+        return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviesPage);
     }
 
     @Override
