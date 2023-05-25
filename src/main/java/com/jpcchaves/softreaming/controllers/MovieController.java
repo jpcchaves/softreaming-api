@@ -56,7 +56,7 @@ public class MovieController {
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
                             content = @Content(
-                                    array = @ArraySchema(schema = @Schema(implementation = MovieResponseDto.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = MovieResponsePaginatedDto.class))
                             )
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
