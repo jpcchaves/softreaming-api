@@ -29,4 +29,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     Page<Movie> findByRatings_RatingGreaterThanEqual(Pageable pageable,
                                                      Double rating);
+
+    Page<Movie> findByReleaseDateBetween(String startDate,
+                                         String endDate,
+                                         Pageable pageable);
 }

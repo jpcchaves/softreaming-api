@@ -103,7 +103,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieResponsePaginatedDto<?> getAll(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Movie> moviesPage = repository.findAll(pageable);
-        List<MovieByBestRatedDto> movieByBestRatedDto = buildBestRatedDtos(moviesPage.getContent());
+        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(moviesPage.getContent());
         return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviesPage);
     }
 
@@ -241,7 +241,7 @@ public class MovieServiceImpl implements MovieService {
             Page<Movie> moviePage = repository.findByNameContainingIgnoreCaseAndReleaseDate(pageable,
                     name,
                     releaseDate);
-            List<MovieByBestRatedDto> movieByBestRatedDto = buildBestRatedDtos(moviePage.getContent());
+            List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(moviePage.getContent());
 
             return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviePage);
         }
@@ -254,7 +254,7 @@ public class MovieServiceImpl implements MovieService {
             moviePage = repository.findByNameContainingIgnoreCase(pageable,
                     name);
         }
-        List<MovieByBestRatedDto> movieByBestRatedDto = buildBestRatedDtos(moviePage.getContent());
+        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(moviePage.getContent());
 
         return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviePage);
     }
@@ -263,7 +263,17 @@ public class MovieServiceImpl implements MovieService {
     public List<MovieByBestRatedDto> sortByBestRating() {
         List<Movie> movieList = repository.findTop10ByOrderByRatings_RatingDesc();
 
-        return buildBestRatedDtos(movieList);
+        return buildMovieListResponse(movieList);
+    }
+
+    @Override
+    public MovieResponsePaginatedDto<?> filterByReleaseDateBetween(String startDate,
+                                                                   String endDate,
+                                                                   Pageable pageable) {
+        Page<Movie> moviePage = repository.findByReleaseDateBetween(startDate, endDate, pageable);
+        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(moviePage.getContent());
+
+        return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviePage);
     }
 
     @Override
@@ -329,12 +339,12 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponsePaginatedDto<?> filterByRatingGreaterThan(Pageable pageable,
                                                                   Double rating) {
         Page<Movie> movies = repository.findByRatings_RatingGreaterThanEqual(pageable, rating);
-        List<MovieByBestRatedDto> movieByBestRatedDto = buildBestRatedDtos(movies.getContent());
+        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(movies.getContent());
 
         return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
     }
 
-    private List<MovieByBestRatedDto> buildBestRatedDtos(List<Movie> movieList) {
+    private List<MovieByBestRatedDto> buildMovieListResponse(List<Movie> movieList) {
         List<MovieByBestRatedDto> bestRatedDtos = new ArrayList<>();
 
         for (Movie movie : movieList) {

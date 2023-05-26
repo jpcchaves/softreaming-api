@@ -51,4 +51,8 @@ public interface MovieService {
 
     MovieResponsePaginatedDto<?> filterByRatingGreaterThan(Pageable pageable,
                                                            Double rating);
+
+    MovieResponsePaginatedDto<?> filterByReleaseDateBetween(String startDate,
+                                                            String endDate,
+                                                            Pageable pageable);
 }
