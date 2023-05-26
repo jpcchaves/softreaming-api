@@ -275,6 +275,13 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(service.filterByRatingGreaterThan(pageable, rating));
     }
 
+    @GetMapping("/filter/release-date")
+    public ResponseEntity<MovieResponsePaginatedDto<?>> filterByReleaseDateBetween(@RequestParam(value = "startDate") String startDate,
+                                                                                   @RequestParam(value = "endDate") String endDate,
+                                                                                   Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.filterByReleaseDateBetween(startDate, endDate, pageable));
+    }
+
     @Operation(summary = "Adds a movie rating",
             description = "Adds a movie rating by passing a movie ID and a JSON representation of the rating",
             tags = {"Movie - Rating"},
