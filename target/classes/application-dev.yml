@@ -5,7 +5,7 @@ spring:
     import: optional:file:.env[.properties]
   datasource:
     url: ${DB_DEV_URL}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
     username: ${DB_DEV_ROOT_USERNAME}
     password: ${DB_DEV_ROOT_PASSWORD}
   jpa:
@@ -13,7 +13,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         show_sql: true
         format_sql: true
 app:
