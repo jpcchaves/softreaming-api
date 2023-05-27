@@ -1,4 +1,4 @@
-INSERT INTO `softreaming_db`.`categories` (`id`, `category`)
+INSERT INTO `softreaming-db`.`categories` (`id`, `category`)
 VALUES ('1', 'Ação'),
        ('2', 'Aventura'),
        ('3', 'Cinema de arte'),
