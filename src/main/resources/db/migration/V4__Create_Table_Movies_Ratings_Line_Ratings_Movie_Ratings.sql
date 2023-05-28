@@ -27,10 +27,6 @@ CREATE TABLE
                        ratings_amount integer NULL
 );
 
-ALTER TABLE
-    public.ratings
-    ADD
-        CONSTRAINT ratings_pkey PRIMARY KEY (id);
 
 CREATE TABLE
     public.line_rating (
@@ -41,17 +37,5 @@ CREATE TABLE
                            rating_id bigint NOT NULL
 );
 
-ALTER TABLE
-    public.line_rating
-    ADD
-        CONSTRAINT line_rating_pkey PRIMARY KEY (id);
-
 CREATE TABLE
     public.movie_rating (rating_id bigint NULL, movie_id bigint NOT NULL);
-
-ALTER TABLE
-    public.movie_rating
-    ADD
-        CONSTRAINT movie_rating_pkey PRIMARY KEY (movie_id);
-
-
