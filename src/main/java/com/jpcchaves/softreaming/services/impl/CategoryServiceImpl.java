@@ -5,7 +5,6 @@ import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.services.CategoryService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
@@ -13,7 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class CategoryServiceImpl implements CategoryService<CategoryDto, CategoryDto> {
@@ -78,12 +76,6 @@ public class CategoryServiceImpl implements CategoryService<CategoryDto, Categor
     public void delete(Long id) {
         findCategoryById(id);
         repository.deleteById(id);
-    }
-
-    @Override
-    public Set<MovieResponseMinDto> getAllMoviesByCategoryId(Long categoryId) {
-        Category category = repository.findById(categoryId).orElseThrow(() -> new BadRequestException(""));
-        return mapper.parseSetObjects(category.getMovies(), MovieResponseMinDto.class);
     }
 
     private Category updateCategory(Category category,

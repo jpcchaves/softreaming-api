@@ -1,7 +1,6 @@
 package com.jpcchaves.softreaming.controllers;
 
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.services.impl.CategoryServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -16,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -107,7 +105,8 @@ public class CategoryController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDto> update(@PathVariable("id") Long id, @RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<CategoryDto> update(@PathVariable("id") Long id,
+                                              @RequestBody CategoryDto categoryDto) {
         return ResponseEntity.ok(service.update(categoryDto, id));
     }
 
@@ -127,27 +126,5 @@ public class CategoryController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @GetMapping("/{id}/movies")
-    @Cacheable(
-            cacheNames = "moviesByCategory"
-    )
-    @Operation(summary = "Gets a movies list",
-            description = "Gets a list of movies by category by passing a category ID",
-            tags = {"Category"},
-            responses = {
-                    @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content(
-                                    array = @ArraySchema(schema = @Schema(implementation = MovieResponseMinDto.class))
-                            )
-                    ),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
-            }
-    )
-    public ResponseEntity<Set<MovieResponseMinDto>> getAllMoviesByCategory(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.getAllMoviesByCategoryId(id));
     }
 }
