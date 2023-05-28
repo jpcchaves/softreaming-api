@@ -1,8 +1,8 @@
 CREATE TABLE
     public.directors (
                          id SERIAL NOT NULL,
-                         first_name character varying(100) NULL,
-                         last_name character varying(100) NULL
+                         first_name character varying(100)  NULL,
+                         last_name character varying(100)  NULL
 );
 
 ALTER TABLE

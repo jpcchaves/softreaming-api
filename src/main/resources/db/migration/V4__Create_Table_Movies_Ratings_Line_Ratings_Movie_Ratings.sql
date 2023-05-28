@@ -5,7 +5,7 @@ CREATE TABLE
                       duration character varying(255) NOT NULL,
                       long_description text NOT NULL,
                       movie_url character varying(255) NOT NULL,
-                      name character varying(255) NOT NULL,
+                      name character varying(255) unique NOT NULL,
                       poster_url character varying(255) NOT NULL,
                       release_date character varying(255) NOT NULL,
                       short_description character varying(255) NOT NULL
@@ -27,6 +27,10 @@ CREATE TABLE
                        ratings_amount integer NULL
 );
 
+ALTER TABLE
+    public.ratings
+    ADD
+        CONSTRAINT ratings_pkey PRIMARY KEY (id);
 
 CREATE TABLE
     public.line_rating (

@@ -1,8 +1,8 @@
 CREATE TABLE
     public.categories
 (
-    id       bigserial              NOT NULL,
-    category character varying(255) NOT NULL
+    id       bigserial                     NOT NULL,
+    category character varying(255) unique NOT NULL
 );
 
 ALTER TABLE

@@ -3,12 +3,12 @@ CREATE TABLE
 (
     id         bigserial                      NOT NULL,
     created_at timestamp(6) without time zone NULL,
-    email      character varying(255)         NOT NULL,
+    email      character varying(255)  unique       NOT NULL,
     is_admin   boolean                        NULL,
     name       character varying(255)         NULL,
     password   character varying(255)         NULL,
     updated_at timestamp(6) without time zone NULL,
-    username   character varying(255)         NOT NULL
+    username   character varying(255)   unique     NOT NULL
 );
 
 ALTER TABLE
