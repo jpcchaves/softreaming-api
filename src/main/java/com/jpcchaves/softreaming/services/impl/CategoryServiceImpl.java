@@ -5,7 +5,6 @@ import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.repositories.CategoryRepository;
 import com.jpcchaves.softreaming.services.CategoryService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
@@ -13,8 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class CategoryServiceImpl implements CategoryService<CategoryDto, CategoryDto> {
@@ -30,6 +27,9 @@ public class CategoryServiceImpl implements CategoryService<CategoryDto, Categor
 
     @Override
     public CategoryDto create(CategoryDto requestDto) {
+        if (repository.existsByCategory(requestDto.getCategory())) {
+            throw new BadRequestException("A categoria " + requestDto.getCategory() + " já existe!");
+        }
         try {
             Category category = mapper.parseObject(requestDto, Category.class);
             Category savedCategory = repository.save(category);
@@ -50,16 +50,17 @@ public class CategoryServiceImpl implements CategoryService<CategoryDto, Categor
 
     @Override
     public CategoryDto getById(Long id) {
-        Category category = getCategory(id).get();
+        Category category = findCategoryById(id);
         CategoryDto categoryDto = mapper.parseObject(category, CategoryDto.class);
 
         return categoryDto;
     }
 
     @Override
-    public CategoryDto update(CategoryDto requestDto, Long id) {
+    public CategoryDto update(CategoryDto requestDto,
+                              Long id) {
         try {
-            Category category = getCategory(id).get();
+            Category category = findCategoryById(id);
             Category updatedCategory = updateCategory(category, requestDto);
 
             Category savedCategory = repository.save(updatedCategory);
@@ -73,14 +74,8 @@ public class CategoryServiceImpl implements CategoryService<CategoryDto, Categor
 
     @Override
     public void delete(Long id) {
-        getCategory(id);
+        findCategoryById(id);
         repository.deleteById(id);
-    }
-
-    @Override
-    public Set<MovieResponseMinDto> getAllMoviesByCategoryId(Long categoryId) {
-        var category = repository.findById(categoryId).orElseThrow(() -> new BadRequestException(""));
-        return mapper.parseSetObjects(category.getMovies(), MovieResponseMinDto.class);
     }
 
     private Category updateCategory(Category category,
@@ -90,9 +85,9 @@ public class CategoryServiceImpl implements CategoryService<CategoryDto, Categor
         return category;
     }
 
-    private Optional<Category> getCategory(Long id) {
-        return Optional.ofNullable(repository
+    private Category findCategoryById(Long id) {
+        return repository
                 .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado")));
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma categoria com o ID  informado"));
     }
 }

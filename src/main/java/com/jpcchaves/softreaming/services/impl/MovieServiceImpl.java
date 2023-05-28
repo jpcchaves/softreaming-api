@@ -61,19 +61,7 @@ public class MovieServiceImpl implements MovieService {
             throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + requestDto.getName());
         }
 
-        List<Director> directorsToSave = new ArrayList<>();
-        for (DirectorDto directorDto : requestDto.getDirectors()) {
-            Optional<Director> director = directorRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(directorDto.getFirstName(), directorDto.getLastName());
-
-            if (director.isEmpty()) {
-                Director savedDirector = directorRepository.save(mapper.parseObject(directorDto, Director.class));
-                directorsToSave.add(savedDirector);
-            } else {
-                directorsToSave.add(director.get());
-            }
-        }
-
-        directorRepository.saveAll(directorsToSave);
+        Set<Director> directorSet = buildMovieDirectors(requestDto.getDirectors());
 
         try {
             Set<Category> categoriesSet = new HashSet<>(categoryRepository
@@ -82,7 +70,7 @@ public class MovieServiceImpl implements MovieService {
             Movie movie = mapper.parseObject(requestDto,
                     Movie.class);
             movie.setCategories(categoriesSet);
-            movie.setDirectors(new HashSet<>(directorsToSave));
+            movie.setDirectors(directorSet);
 
             Movie savedMovie = repository.save(movie);
 
@@ -344,6 +332,19 @@ public class MovieServiceImpl implements MovieService {
         return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
     }
 
+    @Override
+    public MovieResponsePaginatedDto<?> findAllMoviesByCategory(Pageable pageable,
+                                                                Long categoryId) {
+        Category category = categoryRepository
+                .findById(categoryId)
+                .orElseThrow(() -> new BadRequestException("Categoria não encontrada com o ID informado: " + categoryId));
+
+        Page<Movie> movies = repository.findAllByCategories(pageable, category);
+        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(movies.getContent());
+        
+        return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
+    }
+
     private List<MovieByBestRatedDto> buildMovieListResponse(List<Movie> movieList) {
         List<MovieByBestRatedDto> bestRatedDtos = new ArrayList<>();
 
@@ -378,6 +379,28 @@ public class MovieServiceImpl implements MovieService {
         movieResponseDto.setDirectors(mapper.parseSetObjects(movie.getDirectors(), DirectorDto.class));
 
         return movieResponseDto;
+    }
+
+    private Set<Director> buildMovieDirectors(Set<DirectorDto> directorListDto) {
+        List<Director> directorsThatAlreadyExists = new ArrayList<>();
+        List<Director> directorsToSave = new ArrayList<>();
+        for (DirectorDto directorDto : directorListDto) {
+            Optional<Director> director = directorRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(directorDto.getFirstName(), directorDto.getLastName());
+
+            if (director.isPresent()) {
+                directorsThatAlreadyExists.add(director.get());
+            } else {
+                directorsToSave.add(mapper.parseObject(directorDto, Director.class));
+            }
+        }
+
+        List<Director> savedDirectors = directorRepository.saveAll(directorsToSave);
+        Set<Director> directorSet = new HashSet<>();
+
+        directorSet.addAll(directorsThatAlreadyExists);
+        directorSet.addAll(savedDirectors);
+
+        return directorSet;
     }
 
     private Boolean hasMoreThanOneRating(Integer ratingsAmount) {

@@ -55,4 +55,7 @@ public interface MovieService {
     MovieResponsePaginatedDto<?> filterByReleaseDateBetween(String startDate,
                                                             String endDate,
                                                             Pageable pageable);
+
+    MovieResponsePaginatedDto<?> findAllMoviesByCategory(Pageable pageable,
+                                                         Long categoryId);
 }

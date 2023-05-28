@@ -1,5 +1,6 @@
 package com.jpcchaves.softreaming.repositories;
 
+import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,4 +34,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Page<Movie> findByReleaseDateBetween(String startDate,
                                          String endDate,
                                          Pageable pageable);
+
+    Page<Movie> findAllByCategories(Pageable pageable,
+                                    Category category);
 }

@@ -1,9 +1,6 @@
 package com.jpcchaves.softreaming.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
-import java.util.Set;
 
 @Entity
 @Table(name = "categories")
@@ -14,22 +11,14 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String category;
 
-    @ManyToMany(
-            mappedBy = "categories",
-            fetch = FetchType.LAZY
-    )
-    @JsonIgnore
-    private Set<Movie> movies;
-
     public Category() {
     }
 
     public Category(Long id,
-                    String category,
-                    Set<Movie> movies) {
+                    String category
+    ) {
         this.id = id;
         this.category = category;
-        this.movies = movies;
     }
 
     public Long getId() {
@@ -46,13 +35,5 @@ public class Category {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public Set<Movie> getMovies() {
-        return movies;
-    }
-
-    public void setMovies(Set<Movie> movies) {
-        this.movies = movies;
     }
 }
