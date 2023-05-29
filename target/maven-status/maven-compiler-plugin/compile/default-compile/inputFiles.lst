@@ -1,72 +1,72 @@
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\controllers\CategoryController.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieRatingDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieByBestRatedDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\RegisterRequestDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\impl\MovieServiceImpl.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\entities\Movie.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\controllers\MovieController.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\repositories\ProfileRepository.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\controllers\AuthController.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\directors\DirectorsPaginatedDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\JwtAuthResponseDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\repositories\DirectorRepository.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\DirectorsService.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\ApiMessageResponseDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieResponseDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\AuthService.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\entities\Category.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\ProfileService.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\exceptions\SqlBadRequestException.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\UpdateUserResponseDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\repositories\MovieRepository.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\security\JwtAuthenticationEntrypoint.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\SecurityContextService.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieRequestDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\MovieService.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\exceptions\BadRequestException.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\RoleDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\exceptions\CustomBadCredentialsException.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\entities\LineRating.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\category\CategoryDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\impl\CategoryServiceImpl.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\repositories\CategoryRepository.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\SoftreamingApplication.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\exceptions\handler\CustomizedResponseEntityExceptionHandler.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\security\JwtAuthenticationFilter.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\impl\AuthServiceImpl.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieResponseMinDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\directors\DirectorsIdsDtos.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\entities\Role.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\config\mapper\MapperConfig.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\LoginDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\repositories\LineRatingRepository.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\config\security\SecurityConfig.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\controllers\DirectorsController.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\impl\ProfileServiceImpl.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\utils\mapper\MapperUtils.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\rating\RatingDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\directors\DirectorDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\security\JwtTokenProvider.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\repositories\RatingRepository.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\UpdateUserRequestDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieResponsePaginatedDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\entities\Rating.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\user\UserDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\profile\ProfileDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\CategoryRequestDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\exceptions\model\ExceptionResponse.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\impl\SecurityContextServiceImpl.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\CategoryService.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\exceptions\ResourceNotFoundException.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\RegisterResponseDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\repositories\RoleRepository.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\services\impl\DirectorsServiceImpl.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\controllers\ProfileController.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\entities\Profile.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\payload\dtos\rating\LineRatingDto.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\security\CustomUserDetailsService.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\entities\User.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\config\swagger\OpenApi.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\entities\Director.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\repositories\UserRepository.java
-D:\Meus Documentos\Documentos\intellij-ws\softreaming-ws\softreaming\src\main\java\com\jpcchaves\softreaming\security\CustomAccessDeniedHandler.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\DirectorsService.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieResponseMinDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\CategoryService.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\entities\Movie.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\entities\User.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieRequestDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\repositories\RoleRepository.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\SecurityContextService.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\config\security\SecurityConfig.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieResponsePaginatedDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\exceptions\ResourceNotFoundException.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\impl\ProfileServiceImpl.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\directors\DirectorDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\controllers\ProfileController.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\LoginDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\security\JwtAuthenticationFilter.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\AuthService.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\ApiMessageResponseDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\user\UserDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\profile\ProfileDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\entities\Role.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\rating\LineRatingDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\rating\RatingDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\repositories\MovieRepository.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\config\swagger\OpenApi.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\UpdateUserRequestDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\security\JwtAuthenticationEntrypoint.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\MovieService.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\exceptions\handler\CustomizedResponseEntityExceptionHandler.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\security\CustomUserDetailsService.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieRatingDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\config\mapper\MapperConfig.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\entities\Rating.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\controllers\AuthController.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\impl\SecurityContextServiceImpl.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\entities\Profile.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\exceptions\BadRequestException.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\exceptions\model\ExceptionResponse.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\SoftreamingApplication.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieByBestRatedDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\exceptions\CustomBadCredentialsException.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\impl\DirectorsServiceImpl.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\exceptions\SqlBadRequestException.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\entities\LineRating.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\impl\CategoryServiceImpl.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\entities\Director.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\directors\DirectorsPaginatedDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\controllers\CategoryController.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\utils\mapper\MapperUtils.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\impl\MovieServiceImpl.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\JwtAuthResponseDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\RegisterResponseDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\directors\DirectorsIdsDtos.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\repositories\ProfileRepository.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\impl\AuthServiceImpl.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\repositories\LineRatingRepository.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\RegisterRequestDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\security\JwtTokenProvider.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\repositories\DirectorRepository.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\controllers\DirectorsController.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\controllers\MovieController.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\MovieResponseDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\RoleDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\repositories\CategoryRepository.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\auth\UpdateUserResponseDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\movie\CategoryRequestDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\payload\dtos\category\CategoryDto.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\entities\Category.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\repositories\RatingRepository.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\repositories\UserRepository.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\services\ProfileService.java
+C:\Users\adasi\OneDrive\Documentos\projetos\intellij-ws\softreaming-ws\softreaming-api\src\main\java\com\jpcchaves\softreaming\security\CustomAccessDeniedHandler.java
