@@ -302,18 +302,13 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public ApiMessageResponseDto addDirector(Long id,
-                                             List<DirectorDto> directorDtos) {
+                                             DirectorsIdsDtos directorsIdsDtos) {
         Movie movie = getMovie(id);
 
-        for (DirectorDto directorDto : directorDtos) {
-            Optional<Director> director = directorRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(directorDto.getFirstName(), directorDto.getLastName());
+        List<Director> directors = directorRepository.findAllById(directorsIdsDtos.getDirectorIds());
 
-            if (director.isPresent()) {
-                movie.getDirectors().add(director.get());
-            } else {
-                Director savedDirector = directorRepository.save(mapper.parseObject(directorDto, Director.class));
-                movie.getDirectors().add(savedDirector);
-            }
+        for (Director director : directors) {
+            movie.getDirectors().add(director);
         }
 
         repository.save(movie);

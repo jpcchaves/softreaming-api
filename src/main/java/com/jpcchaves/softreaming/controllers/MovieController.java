@@ -1,7 +1,6 @@
 package com.jpcchaves.softreaming.controllers;
 
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
-import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
@@ -210,7 +209,7 @@ public class MovieController {
     )
     @PostMapping("/{id}/add-director")
     public ResponseEntity<ApiMessageResponseDto> addDirector(@PathVariable("id") Long id,
-                                                             @RequestBody List<DirectorDto> directorDto) {
+                                                             @RequestBody DirectorsIdsDtos directorDto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.addDirector(id,
                 directorDto));
     }
