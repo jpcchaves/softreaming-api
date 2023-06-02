@@ -100,6 +100,7 @@ public class DirectorsController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ApiMessageResponseDto> create(@RequestBody DirectorDto directorDto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.create(directorDto));
@@ -119,6 +120,7 @@ public class DirectorsController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ApiMessageResponseDto> update(
             @PathVariable("id") Long id,

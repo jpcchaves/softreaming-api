@@ -353,12 +353,12 @@ public class MovieServiceImpl implements MovieService {
         Movie movie = getMovie(id);
 
         for (Long actorId : actorsIds.getActorsIds()) {
-            movie.getDirectors().removeIf(actor -> Objects.equals(actor.getId(), actorId));
+            movie.getActors().removeIf(actor -> Objects.equals(actor.getId(), actorId));
         }
 
         repository.save(movie);
 
-        return new ApiMessageResponseDto("Diretor(es) removido(s) com sucesso");
+        return new ApiMessageResponseDto("Ator(es) removido(s) com sucesso");
     }
 
     @Override
