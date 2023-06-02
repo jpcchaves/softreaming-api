@@ -92,6 +92,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieResponsePaginatedDto<?> getAll(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Movie> moviesPage = repository.findAll(pageable);
         List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(moviesPage.getContent());
+
         return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviesPage);
     }
 
@@ -341,7 +342,7 @@ public class MovieServiceImpl implements MovieService {
 
         Page<Movie> movies = repository.findAllByCategories(pageable, category);
         List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(movies.getContent());
-        
+
         return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
     }
 
