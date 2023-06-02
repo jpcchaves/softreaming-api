@@ -73,11 +73,15 @@ public class MovieServiceImpl implements MovieService {
             List<Actor> actors = actorRepository.findAllById(requestDto.getActorsIds());
             Set<Actor> actorsSet = new HashSet<>(actors);
 
+            List<Director> directors = directorRepository.findAllById(requestDto.getDirectorsIds());
+            Set<Director> directorSet = new HashSet<>(directors);
+
             Movie movie = mapper.parseObject(requestDto,
                     Movie.class);
 
             movie.setCategories(categoriesSet);
             movie.setActors(actorsSet);
+            movie.setDirectors(directorSet);
 
             Movie savedMovie = repository.save(movie);
 
