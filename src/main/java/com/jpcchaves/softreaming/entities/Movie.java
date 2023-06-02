@@ -64,6 +64,21 @@ public class Movie {
     )
     private Set<Director> directors = new HashSet<>();
 
+    @ManyToMany(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.DETACH
+    )
+    @JoinTable(
+            name = "movies_actors",
+            joinColumns = @JoinColumn(
+                    name = "movie_id", referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "actor_id", referencedColumnName = "id"
+            )
+    )
+    private Set<Actor> actors = new HashSet<>();
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinTable(
             name = "movie_rating",
@@ -91,6 +106,7 @@ public class Movie {
                  Date createdAt,
                  Set<Category> categories,
                  Set<Director> directors,
+                 Set<Actor> actors,
                  Rating ratings) {
         this.id = id;
         this.name = name;
@@ -103,6 +119,7 @@ public class Movie {
         this.createdAt = createdAt;
         this.categories = categories;
         this.directors = directors;
+        this.actors = actors;
         this.ratings = ratings;
     }
 
@@ -200,6 +217,14 @@ public class Movie {
 
     public void setDirectors(Set<Director> directors) {
         this.directors = directors;
+    }
+
+    public Set<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(Set<Actor> actors) {
+        this.actors = actors;
     }
 
     @Override
