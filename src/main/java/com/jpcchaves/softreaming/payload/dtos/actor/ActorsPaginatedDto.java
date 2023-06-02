@@ -1,25 +1,25 @@
-package com.jpcchaves.softreaming.payload.dtos.directors;
+package com.jpcchaves.softreaming.payload.dtos.actor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DirectorPaginatedDto {
-    private List<DirectorDto> content = new ArrayList<>();
+public class ActorsPaginatedDto {
+    private List<ActorDto> content = new ArrayList<>();
     private int pageNo;
     private int pageSize;
     private long totalElements;
     private int totalPages;
     private boolean last;
 
-    public DirectorPaginatedDto() {
+    public ActorsPaginatedDto() {
     }
 
-    public DirectorPaginatedDto(List<DirectorDto> content,
-                                int pageNo,
-                                int pageSize,
-                                long totalElements,
-                                int totalPages,
-                                boolean last) {
+    public ActorsPaginatedDto(List<ActorDto> content,
+                              int pageNo,
+                              int pageSize,
+                              long totalElements,
+                              int totalPages,
+                              boolean last) {
         this.content = content;
         this.pageNo = pageNo;
         this.pageSize = pageSize;
@@ -28,11 +28,11 @@ public class DirectorPaginatedDto {
         this.last = last;
     }
 
-    public List<DirectorDto> getContent() {
+    public List<ActorDto> getContent() {
         return content;
     }
 
-    public void setContent(List<DirectorDto> content) {
+    public void setContent(List<ActorDto> content) {
         this.content = content;
     }
 
