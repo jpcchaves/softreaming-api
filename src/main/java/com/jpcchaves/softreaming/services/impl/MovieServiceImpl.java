@@ -36,6 +36,7 @@ public class MovieServiceImpl implements MovieService {
     private final LineRatingRepository lineItemRepository;
     private final CategoryRepository categoryRepository;
     private final DirectorRepository directorRepository;
+    private final ActorRepository actorRepository;
     private final SecurityContextService securityContextService;
     private final MapperUtils mapper;
 
@@ -44,6 +45,7 @@ public class MovieServiceImpl implements MovieService {
                             LineRatingRepository lineItemRepository,
                             CategoryRepository categoryRepository,
                             DirectorRepository directorRepository,
+                            ActorRepository actorRepository,
                             SecurityContextService securityContextService,
                             MapperUtils mapper) {
         this.repository = repository;
@@ -51,6 +53,7 @@ public class MovieServiceImpl implements MovieService {
         this.lineItemRepository = lineItemRepository;
         this.categoryRepository = categoryRepository;
         this.directorRepository = directorRepository;
+        this.actorRepository = actorRepository;
         this.securityContextService = securityContextService;
         this.mapper = mapper;
     }
@@ -62,16 +65,19 @@ public class MovieServiceImpl implements MovieService {
             throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + requestDto.getName());
         }
 
-        Set<Director> directorSet = buildMovieDirectors(requestDto.getDirectors());
-
         try {
-            Set<Category> categoriesSet = new HashSet<>(categoryRepository
-                    .findAllById(requestDto.getCategoriesIds()));
+            List<Category> categories = categoryRepository
+                    .findAllById(requestDto.getCategoriesIds());
+            Set<Category> categoriesSet = new HashSet<>(categories);
+
+            List<Actor> actors = actorRepository.findAllById(requestDto.getActorsIds());
+            Set<Actor> actorsSet = new HashSet<>(actors);
 
             Movie movie = mapper.parseObject(requestDto,
                     Movie.class);
+
             movie.setCategories(categoriesSet);
-            movie.setDirectors(directorSet);
+            movie.setActors(actorsSet);
 
             Movie savedMovie = repository.save(movie);
 
@@ -384,28 +390,6 @@ public class MovieServiceImpl implements MovieService {
         return movieResponseDto;
     }
 
-    private Set<Director> buildMovieDirectors(Set<DirectorDto> directorListDto) {
-        List<Director> directorsThatAlreadyExists = new ArrayList<>();
-        List<Director> directorsToSave = new ArrayList<>();
-        for (DirectorDto directorDto : directorListDto) {
-            Optional<Director> director = directorRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(directorDto.getFirstName(), directorDto.getLastName());
-
-            if (director.isPresent()) {
-                directorsThatAlreadyExists.add(director.get());
-            } else {
-                directorsToSave.add(mapper.parseObject(directorDto, Director.class));
-            }
-        }
-
-        List<Director> savedDirectors = directorRepository.saveAll(directorsToSave);
-        Set<Director> directorSet = new HashSet<>();
-
-        directorSet.addAll(directorsThatAlreadyExists);
-        directorSet.addAll(savedDirectors);
-
-        return directorSet;
-    }
-
     private Boolean hasMoreThanOneRating(Integer ratingsAmount) {
         return ratingsAmount > 0;
     }
@@ -436,8 +420,7 @@ public class MovieServiceImpl implements MovieService {
         movie.setDuration(requestDto.getDuration());
         movie.setMovieUrl(requestDto.getMovieUrl());
         movie.setPosterUrl(requestDto.getPosterUrl());
-        movie.setCategories(mapper.parseSetObjects(requestDto.getCategories(),
-                Category.class));
+
         return movie;
     }
 

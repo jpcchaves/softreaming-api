@@ -1,8 +1,5 @@
 package com.jpcchaves.softreaming.payload.dtos.movie;
 
-import com.jpcchaves.softreaming.payload.dtos.category.CategoryDto;
-import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +8,8 @@ import java.util.Set;
 public class MovieRequestDto {
     private Long id;
     private List<Long> categoriesIds;
+    private Set<Long> directorsIds = new HashSet<>();
+    private Set<Long> actorsIds = new HashSet<>();
     private String name;
     private String shortDescription;
     private String longDescription;
@@ -19,14 +18,14 @@ public class MovieRequestDto {
     private String movieUrl;
     private String posterUrl;
     private Date createdAt;
-    private Set<CategoryDto> categories = new HashSet<>();
-    private Set<DirectorDto> directors = new HashSet<>();
 
     public MovieRequestDto() {
     }
 
     public MovieRequestDto(Long id,
                            List<Long> categoriesIds,
+                           Set<Long> directorsIds,
+                           Set<Long> actorsIds,
                            String name,
                            String shortDescription,
                            String longDescription,
@@ -34,11 +33,11 @@ public class MovieRequestDto {
                            String releaseDate,
                            String movieUrl,
                            String posterUrl,
-                           Date createdAt,
-                           Set<CategoryDto> categories,
-                           Set<DirectorDto> directors) {
+                           Date createdAt) {
         this.id = id;
         this.categoriesIds = categoriesIds;
+        this.directorsIds = directorsIds;
+        this.actorsIds = actorsIds;
         this.name = name;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
@@ -47,8 +46,6 @@ public class MovieRequestDto {
         this.movieUrl = movieUrl;
         this.posterUrl = posterUrl;
         this.createdAt = createdAt;
-        this.categories = categories;
-        this.directors = directors;
     }
 
     public Long getId() {
@@ -65,6 +62,22 @@ public class MovieRequestDto {
 
     public void setCategoriesIds(List<Long> categoriesIds) {
         this.categoriesIds = categoriesIds;
+    }
+
+    public Set<Long> getDirectorsIds() {
+        return directorsIds;
+    }
+
+    public void setDirectorsIds(Set<Long> directorsIds) {
+        this.directorsIds = directorsIds;
+    }
+
+    public Set<Long> getActorsIds() {
+        return actorsIds;
+    }
+
+    public void setActorsIds(Set<Long> actorsIds) {
+        this.actorsIds = actorsIds;
     }
 
     public String getName() {
@@ -129,21 +142,5 @@ public class MovieRequestDto {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Set<CategoryDto> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<CategoryDto> categories) {
-        this.categories = categories;
-    }
-
-    public Set<DirectorDto> getDirectors() {
-        return directors;
-    }
-
-    public void setDirectors(Set<DirectorDto> directors) {
-        this.directors = directors;
     }
 }
