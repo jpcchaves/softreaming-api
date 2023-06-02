@@ -5,6 +5,7 @@ import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
+import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
@@ -378,6 +379,7 @@ public class MovieServiceImpl implements MovieService {
         movieResponseDto.setRatings(mapper.parseObject(movie.getRatings(),
                 RatingDto.class));
         movieResponseDto.setDirectors(mapper.parseSetObjects(movie.getDirectors(), DirectorDto.class));
+        movieResponseDto.setActors(mapper.parseSetObjects(movie.getActors(), ActorDto.class));
 
         return movieResponseDto;
     }

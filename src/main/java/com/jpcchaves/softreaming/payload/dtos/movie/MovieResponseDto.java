@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.payload.dtos.movie;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 
@@ -21,6 +22,7 @@ public class MovieResponseDto {
     private Date createdAt;
     private Set<String> categories = new HashSet<>();
     private Set<DirectorDto> directors = new HashSet<>();
+    private Set<ActorDto> actors = new HashSet<>();
     private RatingDto ratings;
 
     public MovieResponseDto() {
@@ -37,6 +39,7 @@ public class MovieResponseDto {
                             Date createdAt,
                             Set<String> categories,
                             Set<DirectorDto> directors,
+                            Set<ActorDto> actors,
                             RatingDto ratings) {
         this.id = id;
         this.name = name;
@@ -49,6 +52,7 @@ public class MovieResponseDto {
         this.createdAt = createdAt;
         this.categories = categories;
         this.directors = directors;
+        this.actors = actors;
         this.ratings = ratings;
     }
 
@@ -130,6 +134,14 @@ public class MovieResponseDto {
 
     public void setCategories(Set<String> categories) {
         this.categories = categories;
+    }
+
+    public Set<ActorDto> getActors() {
+        return actors;
+    }
+
+    public void setActors(Set<ActorDto> actors) {
+        this.actors = actors;
     }
 
     public RatingDto getRatings() {
