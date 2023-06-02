@@ -7,7 +7,6 @@ import com.jpcchaves.softreaming.payload.dtos.actor.ActorsPaginatedDto;
 import com.jpcchaves.softreaming.repositories.ActorRepository;
 import com.jpcchaves.softreaming.services.ActorsService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,8 +46,10 @@ public class ActorsServiceImpl implements ActorsService {
     public ActorDto update(ActorDto actorDto,
                            Long id) {
         Actor actor = getActor(id);
-        BeanUtils.copyProperties(actorDto, actor);
-        return mapper.parseObject(actor, ActorDto.class);
+        actor.setFirstName(actorDto.getFirstName());
+        actor.setLastName(actorDto.getLastName());
+        Actor updatedActor = repository.save(actor);
+        return mapper.parseObject(updatedActor, ActorDto.class);
     }
 
     @Override
@@ -63,6 +64,7 @@ public class ActorsServiceImpl implements ActorsService {
         actorsPaginatedDto.setPageSize(actorPage.getSize());
         actorsPaginatedDto.setTotalElements(actorPage.getTotalElements());
         actorsPaginatedDto.setLast(actorPage.isLast());
+        actorsPaginatedDto.setTotalPages(actorPage.getTotalPages());
         return actorsPaginatedDto;
     }
 
