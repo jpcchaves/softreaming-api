@@ -1,7 +1,7 @@
 package com.jpcchaves.softreaming.controllers;
 
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
-import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIds;
+import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIdsDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
@@ -252,7 +252,7 @@ public class MovieController {
     )
     @PostMapping("/{id}/add-actor")
     public ResponseEntity<ApiMessageResponseDto> addActor(@PathVariable("id") Long id,
-                                                          @RequestBody ActorsIds actorsIds) {
+                                                          @RequestBody ActorsIdsDto actorsIds) {
         return ResponseEntity.status(HttpStatus.OK).body(service.addActor(id,
                 actorsIds));
     }
@@ -273,7 +273,7 @@ public class MovieController {
     )
     @PatchMapping("/{id}/remove-actor")
     public ResponseEntity<ApiMessageResponseDto> removeActor(@PathVariable("id") Long id,
-                                                             @RequestBody ActorsIds actorsIds) {
+                                                             @RequestBody ActorsIdsDto actorsIds) {
         return ResponseEntity.status(HttpStatus.OK).body(service.removeActor(id,
                 actorsIds));
     }
@@ -317,6 +317,20 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body(service.filterByRatingGreaterThan(pageable, rating));
     }
 
+    @Operation(summary = "Gets movie list based on a period of time",
+            description = "By passing a start date and end date as a url parameters, you will get all movies with the release date between them",
+            tags = {"Movie"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    schema = @Schema(implementation = MovieResponsePaginatedDto.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @GetMapping("/filter/release-date")
     public ResponseEntity<MovieResponsePaginatedDto<?>> filterByReleaseDateBetween(@RequestParam(value = "startDate") String startDate,
                                                                                    @RequestParam(value = "endDate") String endDate,

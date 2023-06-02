@@ -6,7 +6,7 @@ import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
-import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIds;
+import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIdsDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
@@ -333,7 +333,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public ApiMessageResponseDto addActor(Long id,
-                                          ActorsIds actorsIds) {
+                                          ActorsIdsDto actorsIds) {
         Movie movie = getMovie(id);
 
         List<Actor> actors = actorRepository.findAllById(actorsIds.getActorsIds());
@@ -349,7 +349,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public ApiMessageResponseDto removeActor(Long id,
-                                             ActorsIds actorsIds) {
+                                             ActorsIdsDto actorsIds) {
         Movie movie = getMovie(id);
 
         for (Long actorId : actorsIds.getActorsIds()) {

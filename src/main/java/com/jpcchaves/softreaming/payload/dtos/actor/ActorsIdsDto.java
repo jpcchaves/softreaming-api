@@ -2,13 +2,13 @@ package com.jpcchaves.softreaming.payload.dtos.actor;
 
 import java.util.List;
 
-public class ActorsIds {
+public class ActorsIdsDto {
     private List<Long> actorsIds;
 
-    public ActorsIds() {
+    public ActorsIdsDto() {
     }
 
-    public ActorsIds(List<Long> actorsIds) {
+    public ActorsIdsDto(List<Long> actorsIds) {
         this.actorsIds = actorsIds;
     }
 
