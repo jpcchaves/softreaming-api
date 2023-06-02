@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.controllers;
 
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
+import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIds;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
@@ -233,6 +234,48 @@ public class MovieController {
                                                                 @RequestBody DirectorsIdsDtos directorsIdsDtos) {
         return ResponseEntity.status(HttpStatus.OK).body(service.removeDirector(id,
                 directorsIdsDtos));
+    }
+
+    @Operation(summary = "Adds a movie actor",
+            description = "Adds a movie actor by passing a movie ID and a JSON representation of the Actor",
+            tags = {"Movie - Actor"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    schema = @Schema(implementation = ApiMessageResponseDto.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
+    @PostMapping("/{id}/add-actor")
+    public ResponseEntity<ApiMessageResponseDto> addActor(@PathVariable("id") Long id,
+                                                          @RequestBody ActorsIds actorsIds) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.addActor(id,
+                actorsIds));
+    }
+
+    @Operation(summary = "Removes a movie actor",
+            description = "Removes a movie actor by passing a movie ID and a JSON representation of the Actor",
+            tags = {"Movie - Actor"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    schema = @Schema(implementation = ApiMessageResponseDto.class)
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
+    @PatchMapping("/{id}/remove-actor")
+    public ResponseEntity<ApiMessageResponseDto> removeActor(@PathVariable("id") Long id,
+                                                             @RequestBody ActorsIds actorsIds) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.removeActor(id,
+                actorsIds));
     }
 
     @Operation(summary = "Gets the 10 best rated movies",
