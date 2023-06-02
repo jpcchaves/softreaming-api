@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.services;
 
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
+import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIds;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
@@ -48,6 +49,11 @@ public interface MovieService {
     ApiMessageResponseDto removeDirector(Long id,
                                          DirectorsIdsDtos directorsIdsDtos);
 
+    ApiMessageResponseDto addActor(Long id,
+                                   ActorsIds actorsIds);
+
+    ApiMessageResponseDto removeActor(Long id,
+                                      ActorsIds actorsIds);
 
     MovieResponsePaginatedDto<?> filterByRatingGreaterThan(Pageable pageable,
                                                            Double rating);

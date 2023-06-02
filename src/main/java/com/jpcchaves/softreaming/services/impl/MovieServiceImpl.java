@@ -6,6 +6,7 @@ import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
+import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIds;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
@@ -305,7 +306,7 @@ public class MovieServiceImpl implements MovieService {
                                              DirectorsIdsDtos directorsIdsDtos) {
         Movie movie = getMovie(id);
 
-        List<Director> directors = directorRepository.findAllById(directorsIdsDtos.getDirectorIds());
+        List<Director> directors = directorRepository.findAllById(directorsIdsDtos.getDirectorsIds());
 
         for (Director director : directors) {
             movie.getDirectors().add(director);
@@ -321,8 +322,38 @@ public class MovieServiceImpl implements MovieService {
                                                 DirectorsIdsDtos directorsIdsDtos) {
         Movie movie = getMovie(id);
 
-        for (Long directorId : directorsIdsDtos.getDirectorIds()) {
+        for (Long directorId : directorsIdsDtos.getDirectorsIds()) {
             movie.getDirectors().removeIf(director -> Objects.equals(director.getId(), directorId));
+        }
+
+        repository.save(movie);
+
+        return new ApiMessageResponseDto("Diretor(es) removido(s) com sucesso");
+    }
+
+    @Override
+    public ApiMessageResponseDto addActor(Long id,
+                                          ActorsIds actorsIds) {
+        Movie movie = getMovie(id);
+
+        List<Actor> actors = actorRepository.findAllById(actorsIds.getActorsIds());
+
+        for (Actor actor : actors) {
+            movie.getActors().add(actor);
+        }
+
+        repository.save(movie);
+
+        return new ApiMessageResponseDto("Ator(es) adicionado(s) com sucesso");
+    }
+
+    @Override
+    public ApiMessageResponseDto removeActor(Long id,
+                                             ActorsIds actorsIds) {
+        Movie movie = getMovie(id);
+
+        for (Long actorId : actorsIds.getActorsIds()) {
+            movie.getDirectors().removeIf(actor -> Objects.equals(actor.getId(), actorId));
         }
 
         repository.save(movie);
