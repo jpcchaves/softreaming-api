@@ -54,6 +54,7 @@ public class ActorsServiceImpl implements ActorsService {
 
     @Override
     public void delete(Long id) {
+        getById(id);
         repository.deleteById(id);
     }
 
