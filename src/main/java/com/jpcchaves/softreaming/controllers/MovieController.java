@@ -404,7 +404,7 @@ public class MovieController {
     @GetMapping("/by-category/{categoryId}")
     @Operation(summary = "Gets a movies list",
             description = "Gets a list of movies by category by passing a category ID",
-            tags = {"Category"},
+            tags = {"Movie"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
                             content = @Content(
@@ -419,5 +419,25 @@ public class MovieController {
     public ResponseEntity<MovieResponsePaginatedDto<?>> getAllMoviesByCategory(@PathVariable("categoryId") Long categoryId,
                                                                                Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(service.findAllMoviesByCategory(pageable, categoryId));
+    }
+
+    @GetMapping("/by-actor/{actorId}")
+    @Operation(summary = "Gets a movies list",
+            description = "Gets a list of movies by actor by passing an actor ID",
+            tags = {"Movie"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(
+                                    array = @ArraySchema(schema = @Schema(implementation = MovieResponsePaginatedDto.class))
+                            )
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
+    public ResponseEntity<MovieResponsePaginatedDto<?>> getAllMoviesByActor(@PathVariable("actorId") Long actorId,
+                                                                            Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAllMoviesByActor(pageable, actorId));
     }
 }

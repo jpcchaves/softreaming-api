@@ -64,4 +64,7 @@ public interface MovieService {
 
     MovieResponsePaginatedDto<?> findAllMoviesByCategory(Pageable pageable,
                                                          Long categoryId);
+
+    MovieResponsePaginatedDto<?> findAllMoviesByActor(Pageable pageable,
+                                                      Long actorId);
 }

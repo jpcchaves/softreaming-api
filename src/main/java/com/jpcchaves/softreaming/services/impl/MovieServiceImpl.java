@@ -383,6 +383,19 @@ public class MovieServiceImpl implements MovieService {
         return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
     }
 
+    @Override
+    public MovieResponsePaginatedDto<?> findAllMoviesByActor(Pageable pageable,
+                                                             Long actorId) {
+        Actor actor = actorRepository
+                .findById(actorId)
+                .orElseThrow(() -> new BadRequestException("Categoria não encontrada com o ID informado: " + actorId));
+
+        Page<Movie> movies = repository.findAllByActors(pageable, actor);
+        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(movies.getContent());
+
+        return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
+    }
+
     private List<MovieByBestRatedDto> buildMovieListResponse(List<Movie> movieList) {
         List<MovieByBestRatedDto> bestRatedDtos = new ArrayList<>();
 

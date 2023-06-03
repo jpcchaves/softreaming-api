@@ -1,5 +1,6 @@
 package com.jpcchaves.softreaming.repositories;
 
+import com.jpcchaves.softreaming.entities.Actor;
 import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
 import org.springframework.data.domain.Page;
@@ -37,4 +38,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     Page<Movie> findAllByCategories(Pageable pageable,
                                     Category category);
+
+    Page<Movie> findAllByActors(Pageable pageable,
+                                Actor actor);
 }
