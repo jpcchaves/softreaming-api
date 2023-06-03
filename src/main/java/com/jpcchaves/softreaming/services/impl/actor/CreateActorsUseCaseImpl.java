@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.services.impl.actor;
 
 import com.jpcchaves.softreaming.entities.Actor;
+import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
 import com.jpcchaves.softreaming.repositories.ActorRepository;
 import com.jpcchaves.softreaming.services.usecases.actor.CreateActorUseCase;
@@ -20,6 +21,10 @@ public class CreateActorsUseCaseImpl implements CreateActorUseCase {
 
     @Override
     public ActorDto create(ActorDto actorDto) {
+        if (repository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(actorDto.getFirstName(), actorDto.getLastName()).isPresent()) {
+            throw new BadRequestException("Já existe um ator com os dados informados: " + actorDto.getFirstName() + " " + actorDto.getLastName());
+        }
+
         Actor actor = mapper.parseObject(actorDto, Actor.class);
         Actor actorSaved = repository.save(actor);
         return mapper.parseObject(actorSaved, ActorDto.class);
