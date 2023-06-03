@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/categories")
 @SecurityRequirement(name = "Bearer Authentication")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CategoryController {
 
     private final CategoryServiceImpl service;

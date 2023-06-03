@@ -22,7 +22,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/v1/directors")
 @SecurityRequirement(name = "Bearer Authentication")
-@PreAuthorize("hasRole('ADMIN')")
+@CrossOrigin(origins = "http://localhost:5173")
 public class DirectorsController {
 
     private final DirectorsService service;

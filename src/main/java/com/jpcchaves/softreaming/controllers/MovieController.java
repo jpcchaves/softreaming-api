@@ -24,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/movies")
 @SecurityRequirement(name = "Bearer Authentication")
+@CrossOrigin(origins = "http://localhost:5173")
 public class MovieController {
 
     private final MovieService service;

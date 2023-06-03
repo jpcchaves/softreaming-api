@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/profiles")
 @SecurityRequirement(name = "Bearer Authentication")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ProfileController {
     private final ProfileService service;
 
@@ -94,7 +95,8 @@ public class ProfileController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<ProfileDto> update(@PathVariable(value = "id") Long id, @RequestBody ProfileDto profileDto) {
+    public ResponseEntity<ProfileDto> update(@PathVariable(value = "id") Long id,
+                                             @RequestBody ProfileDto profileDto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(profileDto, id));
     }
 
