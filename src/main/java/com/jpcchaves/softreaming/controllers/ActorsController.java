@@ -2,7 +2,7 @@ package com.jpcchaves.softreaming.controllers;
 
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorsPaginatedDto;
-import com.jpcchaves.softreaming.services.ActorsService;
+import com.jpcchaves.softreaming.services.usecases.actor.ActorsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

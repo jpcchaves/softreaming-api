@@ -1,4 +1,4 @@
-package com.jpcchaves.softreaming.services;
+package com.jpcchaves.softreaming.services.usecases.actor;
 
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorsPaginatedDto;

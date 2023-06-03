@@ -1,11 +1,12 @@
-package com.jpcchaves.softreaming.services.impl;
+package com.jpcchaves.softreaming.services.impl.actor;
 
 import com.jpcchaves.softreaming.entities.Actor;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorsPaginatedDto;
 import com.jpcchaves.softreaming.repositories.ActorRepository;
-import com.jpcchaves.softreaming.services.ActorsService;
+import com.jpcchaves.softreaming.services.usecases.actor.ActorsService;
+import com.jpcchaves.softreaming.services.usecases.actor.CreateActorUseCase;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,18 +17,19 @@ import org.springframework.stereotype.Service;
 public class ActorsServiceImpl implements ActorsService {
     private final ActorRepository repository;
     private final MapperUtils mapper;
+    private final CreateActorUseCase createActorUseCase;
 
     public ActorsServiceImpl(ActorRepository repository,
-                             MapperUtils mapper) {
+                             MapperUtils mapper,
+                             CreateActorUseCase createActorUseCase) {
         this.repository = repository;
         this.mapper = mapper;
+        this.createActorUseCase = createActorUseCase;
     }
 
     @Override
     public ActorDto create(ActorDto actorDto) {
-        Actor actor = mapper.parseObject(actorDto, Actor.class);
-        Actor actorSaved = repository.save(actor);
-        return mapper.parseObject(actorSaved, ActorDto.class);
+        return createActorUseCase.create(actorDto);
     }
 
     @Override
