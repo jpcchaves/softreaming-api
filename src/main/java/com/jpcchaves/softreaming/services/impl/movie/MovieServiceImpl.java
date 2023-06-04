@@ -15,6 +15,7 @@ import com.jpcchaves.softreaming.repositories.*;
 import com.jpcchaves.softreaming.services.SecurityContextService;
 import com.jpcchaves.softreaming.services.usecases.movie.CreateMovieUseCase;
 import com.jpcchaves.softreaming.services.usecases.movie.FilterMovieUseCase;
+import com.jpcchaves.softreaming.services.usecases.movie.GetAllMoviesUseCase;
 import com.jpcchaves.softreaming.services.usecases.movie.MovieService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,6 +38,7 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository repository;
     private final FilterMovieUseCase filterMovie;
     private final CreateMovieUseCase createMovie;
+    private final GetAllMoviesUseCase getAllMovies;
     private final RatingRepository ratingRepository;
     private final LineRatingRepository lineItemRepository;
     private final CategoryRepository categoryRepository;
@@ -48,6 +50,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieServiceImpl(MovieRepository repository,
                             FilterMovieUseCase filterMovie,
                             CreateMovieUseCase createMovie,
+                            GetAllMoviesUseCase getAllMovies,
                             RatingRepository ratingRepository,
                             LineRatingRepository lineItemRepository,
                             CategoryRepository categoryRepository,
@@ -58,6 +61,7 @@ public class MovieServiceImpl implements MovieService {
         this.repository = repository;
         this.filterMovie = filterMovie;
         this.createMovie = createMovie;
+        this.getAllMovies = getAllMovies;
         this.ratingRepository = ratingRepository;
         this.lineItemRepository = lineItemRepository;
         this.categoryRepository = categoryRepository;
@@ -74,10 +78,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponsePaginatedDto<?> getAll(@PageableDefault(sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Movie> moviesPage = repository.findAll(pageable);
-        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(moviesPage.getContent());
-
-        return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviesPage);
+        return getAllMovies.getAll(pageable);
     }
 
     @Override
