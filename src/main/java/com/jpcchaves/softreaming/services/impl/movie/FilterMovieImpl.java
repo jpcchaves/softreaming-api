@@ -6,7 +6,7 @@ import com.jpcchaves.softreaming.payload.dtos.movie.MovieByBestRatedDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponsePaginatedDto;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.services.usecases.movie.FilterMovieUseCase;
-import com.jpcchaves.softreaming.utils.movie.MovieUtilsMethods;
+import com.jpcchaves.softreaming.utils.movie.MovieUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ import java.util.List;
 @Service
 public class FilterMovieImpl implements FilterMovieUseCase {
     private final MovieRepository repository;
-    private final MovieUtilsMethods movieUtils;
+    private final MovieUtils movieUtils;
 
     public FilterMovieImpl(MovieRepository repository,
-                           MovieUtilsMethods movieUtils) {
+                           MovieUtils movieUtils) {
         this.repository = repository;
         this.movieUtils = movieUtils;
     }

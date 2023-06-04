@@ -3,11 +3,8 @@ package com.jpcchaves.softreaming.services.impl.movie;
 import com.jpcchaves.softreaming.entities.*;
 import com.jpcchaves.softreaming.exceptions.BadRequestException;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
-import com.jpcchaves.softreaming.exceptions.SqlBadRequestException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
-import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIdsDto;
-import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
@@ -15,7 +12,6 @@ import com.jpcchaves.softreaming.repositories.*;
 import com.jpcchaves.softreaming.services.SecurityContextService;
 import com.jpcchaves.softreaming.services.usecases.movie.*;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -37,6 +35,7 @@ public class MovieServiceImpl implements MovieService {
     private final CreateMovieUseCase createMovie;
     private final GetAllMoviesUseCase getAllMovies;
     private final GetMovieByIdUseCase getMovieById;
+    private final UpdateMovieUseCase updateMovie;
     private final RatingRepository ratingRepository;
     private final LineRatingRepository lineItemRepository;
     private final CategoryRepository categoryRepository;
@@ -50,6 +49,7 @@ public class MovieServiceImpl implements MovieService {
                             CreateMovieUseCase createMovie,
                             GetAllMoviesUseCase getAllMovies,
                             GetMovieByIdUseCase getMovieById,
+                            UpdateMovieUseCase updateMovie,
                             RatingRepository ratingRepository,
                             LineRatingRepository lineItemRepository,
                             CategoryRepository categoryRepository,
@@ -62,6 +62,7 @@ public class MovieServiceImpl implements MovieService {
         this.createMovie = createMovie;
         this.getAllMovies = getAllMovies;
         this.getMovieById = getMovieById;
+        this.updateMovie = updateMovie;
         this.ratingRepository = ratingRepository;
         this.lineItemRepository = lineItemRepository;
         this.categoryRepository = categoryRepository;
@@ -89,24 +90,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieResponseDto update(MovieRequestDto requestDto,
                                    Long id) {
-        try {
-            List<Category> categories = categoryRepository
-                    .findAllById(requestDto.getCategoriesIds());
-
-            Set<Category> newCategories = new HashSet<>(categories);
-
-            Movie movie = getMovie(id);
-            Movie updatedMovie = updateMovie(movie,
-                    requestDto);
-            updatedMovie.setCategories(newCategories);
-
-            Movie savedMovie = repository.save(updatedMovie);
-
-            return mapper.parseObject(savedMovie,
-                    MovieResponseDto.class);
-        } catch (DataIntegrityViolationException ex) {
-            throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
-        }
+        return updateMovie.update(requestDto, id);
     }
 
 
@@ -353,31 +337,7 @@ public class MovieServiceImpl implements MovieService {
 
         return bestRatedDtos;
     }
-
-    private MovieResponseDto buildMovieResponseDto(Movie movie) {
-        MovieResponseDto movieResponseDto = new MovieResponseDto();
-
-        for (Category category : movie.getCategories()) {
-            movieResponseDto.getCategories().add(category.getCategory());
-        }
-
-        movieResponseDto.setId(movie.getId());
-        movieResponseDto.setName(movie.getName());
-        movieResponseDto.setShortDescription(movie.getShortDescription());
-        movieResponseDto.setLongDescription(movie.getLongDescription());
-        movieResponseDto.setDuration(movie.getDuration());
-        movieResponseDto.setReleaseDate(movie.getReleaseDate());
-        movieResponseDto.setMovieUrl(movie.getMovieUrl());
-        movieResponseDto.setPosterUrl(movie.getPosterUrl());
-        movieResponseDto.setCreatedAt(movie.getCreatedAt());
-        movieResponseDto.setRatings(mapper.parseObject(movie.getRatings(),
-                RatingDto.class));
-        movieResponseDto.setDirectors(mapper.parseSetObjects(movie.getDirectors(), DirectorDto.class));
-        movieResponseDto.setActors(mapper.parseSetObjects(movie.getActors(), ActorDto.class));
-
-        return movieResponseDto;
-    }
-
+    
     private Boolean hasMoreThanOneRating(Integer ratingsAmount) {
         return ratingsAmount > 0;
     }

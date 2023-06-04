@@ -5,10 +5,7 @@ import com.jpcchaves.softreaming.entities.Movie;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieByBestRatedDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
-import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponsePaginatedDto;
+import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
@@ -19,31 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MovieUtilsMethods {
+public class MovieUtils {
     private final MovieRepository repository;
     private final MapperUtils mapper;
 
-    public MovieUtilsMethods(MovieRepository repository,
-                             MapperUtils mapper) {
+    public MovieUtils(MovieRepository repository,
+                      MapperUtils mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
-    public <T> MovieResponsePaginatedDto<?> buildMovieResponsePaginatedDto(List<T> moviesResponse,
-                                                                           Page<Movie> moviePage) {
-        MovieResponsePaginatedDto<T> moviePaginated = new MovieResponsePaginatedDto<>();
-
-        moviePaginated.setContent(moviesResponse);
-        moviePaginated.setPageNo(moviePage.getNumber());
-        moviePaginated.setPageSize(moviePage.getSize());
-        moviePaginated.setTotalElements(moviePage.getTotalElements());
-        moviePaginated.setTotalPages(moviePage.getTotalPages());
-        moviePaginated.setLast(moviePage.isLast());
-
-        return moviePaginated;
-    }
-
-    public MovieResponseDto buildMovieResponseDto(Movie movie) {
+    public static MovieResponseDto getMovieResponseDto(Movie movie,
+                                                       MapperUtils mapper) {
         MovieResponseDto movieResponseDto = new MovieResponseDto();
 
         for (Category category : movie.getCategories()) {
@@ -67,6 +51,24 @@ public class MovieUtilsMethods {
         return movieResponseDto;
     }
 
+    public <T> MovieResponsePaginatedDto<?> buildMovieResponsePaginatedDto(List<T> moviesResponse,
+                                                                           Page<Movie> moviePage) {
+        MovieResponsePaginatedDto<T> moviePaginated = new MovieResponsePaginatedDto<>();
+
+        moviePaginated.setContent(moviesResponse);
+        moviePaginated.setPageNo(moviePage.getNumber());
+        moviePaginated.setPageSize(moviePage.getSize());
+        moviePaginated.setTotalElements(moviePage.getTotalElements());
+        moviePaginated.setTotalPages(moviePage.getTotalPages());
+        moviePaginated.setLast(moviePage.isLast());
+
+        return moviePaginated;
+    }
+
+    public MovieResponseDto buildMovieResponseDto(Movie movie) {
+        return getMovieResponseDto(movie, mapper);
+    }
+
     public List<MovieByBestRatedDto> buildMovieListResponse(List<Movie> movieList) {
         List<MovieByBestRatedDto> bestRatedDtos = new ArrayList<>();
 
@@ -78,6 +80,20 @@ public class MovieUtilsMethods {
         }
 
         return bestRatedDtos;
+    }
+
+    public Movie updateMovie(Movie movie,
+                             MovieRequestDto requestDto) {
+        movie.setId(movie.getId());
+        movie.setCreatedAt(movie.getCreatedAt());
+        movie.setName(requestDto.getName());
+        movie.setShortDescription(requestDto.getShortDescription());
+        movie.setLongDescription(requestDto.getLongDescription());
+        movie.setDuration(requestDto.getDuration());
+        movie.setMovieUrl(requestDto.getMovieUrl());
+        movie.setPosterUrl(requestDto.getPosterUrl());
+
+        return movie;
     }
 
     public Movie getMovie(Long id) {

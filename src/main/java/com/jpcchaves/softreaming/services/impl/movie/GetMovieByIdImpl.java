@@ -3,15 +3,15 @@ package com.jpcchaves.softreaming.services.impl.movie;
 import com.jpcchaves.softreaming.entities.Movie;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.services.usecases.movie.GetMovieByIdUseCase;
-import com.jpcchaves.softreaming.utils.movie.MovieUtilsMethods;
+import com.jpcchaves.softreaming.utils.movie.MovieUtils;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GetMovieByIdImpl implements GetMovieByIdUseCase {
 
-    private final MovieUtilsMethods movieUtils;
+    private final MovieUtils movieUtils;
 
-    public GetMovieByIdImpl(MovieUtilsMethods movieUtils) {
+    public GetMovieByIdImpl(MovieUtils movieUtils) {
         this.movieUtils = movieUtils;
     }
 
