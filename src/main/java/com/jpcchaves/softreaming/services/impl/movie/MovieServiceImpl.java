@@ -8,8 +8,10 @@ import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIdsDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
-import com.jpcchaves.softreaming.repositories.*;
-import com.jpcchaves.softreaming.services.SecurityContextService;
+import com.jpcchaves.softreaming.repositories.ActorRepository;
+import com.jpcchaves.softreaming.repositories.CategoryRepository;
+import com.jpcchaves.softreaming.repositories.DirectorRepository;
+import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.services.usecases.movie.*;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.data.domain.Page;
@@ -37,11 +39,10 @@ public class MovieServiceImpl implements MovieService {
     private final UpdateMovieUseCase updateMovie;
     private final DeleteMovieUseCase deleteMovie;
     private final AddMovieRatingUseCase addMovieRating;
-    private final LineRatingRepository lineItemRepository;
+    private final UpdateMovieRatingUseCase updateMovieRating;
     private final CategoryRepository categoryRepository;
     private final DirectorRepository directorRepository;
     private final ActorRepository actorRepository;
-    private final SecurityContextService securityContextService;
     private final MapperUtils mapper;
 
     public MovieServiceImpl(MovieRepository repository,
@@ -52,11 +53,10 @@ public class MovieServiceImpl implements MovieService {
                             UpdateMovieUseCase updateMovie,
                             DeleteMovieUseCase deleteMovie,
                             AddMovieRatingUseCase addMovieRating,
-                            LineRatingRepository lineItemRepository,
+                            UpdateMovieRatingUseCase updateMovieRating,
                             CategoryRepository categoryRepository,
                             DirectorRepository directorRepository,
                             ActorRepository actorRepository,
-                            SecurityContextService securityContextService,
                             MapperUtils mapper) {
         this.repository = repository;
         this.filterMovie = filterMovie;
@@ -66,11 +66,10 @@ public class MovieServiceImpl implements MovieService {
         this.updateMovie = updateMovie;
         this.deleteMovie = deleteMovie;
         this.addMovieRating = addMovieRating;
-        this.lineItemRepository = lineItemRepository;
+        this.updateMovieRating = updateMovieRating;
         this.categoryRepository = categoryRepository;
         this.directorRepository = directorRepository;
         this.actorRepository = actorRepository;
-        this.securityContextService = securityContextService;
         this.mapper = mapper;
     }
 
@@ -111,36 +110,7 @@ public class MovieServiceImpl implements MovieService {
     public ApiMessageResponseDto updateRating(Long id,
                                               Long ratingId,
                                               MovieRatingDto movieRatingDto) {
-        Long userId = securityContextService.getCurrentLoggedUser().getId();
-
-        LineRating lineRating = lineItemRepository
-                .findByUserIdAndId(userId,
-                        ratingId)
-                .orElseThrow(() -> new BadRequestException("Ocorreu um erro ao editar sua avaliação. Verifique os dados e tente novamente"));
-
-        lineRating.setRate(movieRatingDto.getRating());
-
-        lineItemRepository.save(lineRating);
-
-        Movie movie = getMovie(id);
-        Rating movieRating = movie.getRatings();
-
-        if (movieRating.getLineRatings().isEmpty()) {
-            throw new BadRequestException("Ainda não há avaliações para o filme");
-        }
-
-        if (hasMoreThanOneRating(movieRating.getRatingsAmount())) {
-            Double avgRating = calcRating(movie.getRatings().getLineRatings());
-
-            movieRating.setRating(avgRating);
-            movieRating.setRatingsAmount(movie.getRatings().getLineRatings().size());
-        } else {
-            movieRating.setRating(movieRatingDto.getRating());
-        }
-
-        repository.save(movie);
-
-        return new ApiMessageResponseDto("Avaliação atualizada com sucesso!");
+        return updateMovieRating.updateRating(id, ratingId, movieRatingDto);
     }
 
     @Override
