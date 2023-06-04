@@ -13,7 +13,8 @@ import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import com.jpcchaves.softreaming.repositories.*;
 import com.jpcchaves.softreaming.services.SecurityContextService;
-import com.jpcchaves.softreaming.services.usecases.movie.FilterMovie;
+import com.jpcchaves.softreaming.services.usecases.movie.CreateMovieUseCase;
+import com.jpcchaves.softreaming.services.usecases.movie.FilterMovieUseCase;
 import com.jpcchaves.softreaming.services.usecases.movie.MovieService;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,7 +35,8 @@ public class MovieServiceImpl implements MovieService {
     private static final int TWO = 2;
 
     private final MovieRepository repository;
-    private final FilterMovie filterMovie;
+    private final FilterMovieUseCase filterMovie;
+    private final CreateMovieUseCase createMovie;
     private final RatingRepository ratingRepository;
     private final LineRatingRepository lineItemRepository;
     private final CategoryRepository categoryRepository;
@@ -44,7 +46,8 @@ public class MovieServiceImpl implements MovieService {
     private final MapperUtils mapper;
 
     public MovieServiceImpl(MovieRepository repository,
-                            FilterMovie filterMovie,
+                            FilterMovieUseCase filterMovie,
+                            CreateMovieUseCase createMovie,
                             RatingRepository ratingRepository,
                             LineRatingRepository lineItemRepository,
                             CategoryRepository categoryRepository,
@@ -54,6 +57,7 @@ public class MovieServiceImpl implements MovieService {
                             MapperUtils mapper) {
         this.repository = repository;
         this.filterMovie = filterMovie;
+        this.createMovie = createMovie;
         this.ratingRepository = ratingRepository;
         this.lineItemRepository = lineItemRepository;
         this.categoryRepository = categoryRepository;
@@ -65,43 +69,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public ApiMessageResponseDto create(MovieRequestDto requestDto) {
-
-        if (repository.existsByName(requestDto.getName())) {
-            throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + requestDto.getName());
-        }
-
-        try {
-            List<Category> categories = categoryRepository
-                    .findAllById(requestDto.getCategoriesIds());
-            Set<Category> categoriesSet = new HashSet<>(categories);
-
-            List<Actor> actors = actorRepository.findAllById(requestDto.getActorsIds());
-            Set<Actor> actorsSet = new HashSet<>(actors);
-
-            List<Director> directors = directorRepository.findAllById(requestDto.getDirectorsIds());
-            Set<Director> directorSet = new HashSet<>(directors);
-
-            Movie movie = mapper.parseObject(requestDto,
-                    Movie.class);
-
-            movie.setCategories(categoriesSet);
-            movie.setActors(actorsSet);
-            movie.setDirectors(directorSet);
-
-            Movie savedMovie = repository.save(movie);
-
-            Rating rating = ratingRepository.save(new Rating(0.0,
-                    0,
-                    new Date(),
-                    savedMovie));
-            savedMovie.setRatings(rating);
-
-            repository.save(savedMovie);
-
-            return new ApiMessageResponseDto("Filme criado com sucesso!");
-        } catch (DataIntegrityViolationException ex) {
-            throw new SqlBadRequestException(("Ocorreu um erro: " + ex.getRootCause().getMessage()));
-        }
+        return createMovie.create(requestDto);
     }
 
     @Override
