@@ -5,7 +5,7 @@ import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIdsDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
-import com.jpcchaves.softreaming.services.MovieService;
+import com.jpcchaves.softreaming.services.usecases.movie.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

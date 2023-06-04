@@ -1,6 +1,9 @@
 HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-#env
 .env
 
 ### STS ###
@@ -17,6 +20,7 @@ HELP.md
 *.iws
 *.iml
 *.ipr
+.env
 
 ### NetBeans ###
 /nbproject/private/

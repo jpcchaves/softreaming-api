@@ -1,1 +1,0 @@
-alter table profiles add CONSTRAINT `FK410q61iev7klncmpqfuo85ivh` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`));
