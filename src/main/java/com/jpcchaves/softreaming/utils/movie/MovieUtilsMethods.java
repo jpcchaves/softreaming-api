@@ -2,6 +2,7 @@ package com.jpcchaves.softreaming.utils.movie;
 
 import com.jpcchaves.softreaming.entities.Category;
 import com.jpcchaves.softreaming.entities.Movie;
+import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieByBestRatedDto;
@@ -9,6 +10,7 @@ import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponseMinDto;
 import com.jpcchaves.softreaming.payload.dtos.movie.MovieResponsePaginatedDto;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
+import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -18,9 +20,12 @@ import java.util.List;
 
 @Component
 public class MovieUtilsMethods {
+    private final MovieRepository repository;
     private final MapperUtils mapper;
 
-    public MovieUtilsMethods(MapperUtils mapper) {
+    public MovieUtilsMethods(MovieRepository repository,
+                             MapperUtils mapper) {
+        this.repository = repository;
         this.mapper = mapper;
     }
 
@@ -73,5 +78,11 @@ public class MovieUtilsMethods {
         }
 
         return bestRatedDtos;
+    }
+
+    public Movie getMovie(Long id) {
+        return repository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado"));
     }
 }

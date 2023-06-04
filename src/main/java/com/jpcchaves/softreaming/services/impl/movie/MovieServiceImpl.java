@@ -13,10 +13,7 @@ import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
 import com.jpcchaves.softreaming.repositories.*;
 import com.jpcchaves.softreaming.services.SecurityContextService;
-import com.jpcchaves.softreaming.services.usecases.movie.CreateMovieUseCase;
-import com.jpcchaves.softreaming.services.usecases.movie.FilterMovieUseCase;
-import com.jpcchaves.softreaming.services.usecases.movie.GetAllMoviesUseCase;
-import com.jpcchaves.softreaming.services.usecases.movie.MovieService;
+import com.jpcchaves.softreaming.services.usecases.movie.*;
 import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -39,6 +36,7 @@ public class MovieServiceImpl implements MovieService {
     private final FilterMovieUseCase filterMovie;
     private final CreateMovieUseCase createMovie;
     private final GetAllMoviesUseCase getAllMovies;
+    private final GetMovieByIdUseCase getMovieById;
     private final RatingRepository ratingRepository;
     private final LineRatingRepository lineItemRepository;
     private final CategoryRepository categoryRepository;
@@ -51,6 +49,7 @@ public class MovieServiceImpl implements MovieService {
                             FilterMovieUseCase filterMovie,
                             CreateMovieUseCase createMovie,
                             GetAllMoviesUseCase getAllMovies,
+                            GetMovieByIdUseCase getMovieById,
                             RatingRepository ratingRepository,
                             LineRatingRepository lineItemRepository,
                             CategoryRepository categoryRepository,
@@ -62,6 +61,7 @@ public class MovieServiceImpl implements MovieService {
         this.filterMovie = filterMovie;
         this.createMovie = createMovie;
         this.getAllMovies = getAllMovies;
+        this.getMovieById = getMovieById;
         this.ratingRepository = ratingRepository;
         this.lineItemRepository = lineItemRepository;
         this.categoryRepository = categoryRepository;
@@ -83,11 +83,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponseDto getById(Long id) {
-
-        Movie movie = getMovie(id);
-
-        return buildMovieResponseDto(movie);
-
+        return getMovieById.getById(id);
     }
 
     @Override
