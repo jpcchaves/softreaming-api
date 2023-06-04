@@ -1,6 +1,7 @@
 package com.jpcchaves.softreaming.utils.movie;
 
 import com.jpcchaves.softreaming.entities.Category;
+import com.jpcchaves.softreaming.entities.LineRating;
 import com.jpcchaves.softreaming.entities.Movie;
 import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorDto;
@@ -12,13 +13,15 @@ import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class MovieUtils {
-    private final MovieRepository repository;
-    private final MapperUtils mapper;
+    public final MovieRepository repository;
+    public final MapperUtils mapper;
 
     public MovieUtils(MovieRepository repository,
                       MapperUtils mapper) {
@@ -101,4 +104,25 @@ public class MovieUtils {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado"));
     }
+
+    public Boolean hasMoreThanOneRating(Integer ratingsAmount) {
+        return ratingsAmount > 0;
+    }
+
+    public Double formatRating(Double rating) {
+        BigDecimal bd = new BigDecimal(rating).setScale(2,
+                RoundingMode.HALF_EVEN);
+        return bd.doubleValue();
+    }
+
+    public Double calcRating(List<LineRating> lineRatingList) {
+        Double avgRating = 0.0;
+
+        for (LineRating lineRate : lineRatingList) {
+            avgRating += lineRate.getRate();
+        }
+
+        return formatRating(avgRating / lineRatingList.size());
+    }
+
 }

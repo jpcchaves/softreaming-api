@@ -27,7 +27,6 @@ import java.util.Objects;
 @Service
 public class MovieServiceImpl implements MovieService {
 
-    private static final int ONE = 1;
     private static final int TWO = 2;
 
     private final MovieRepository repository;
@@ -36,7 +35,8 @@ public class MovieServiceImpl implements MovieService {
     private final GetAllMoviesUseCase getAllMovies;
     private final GetMovieByIdUseCase getMovieById;
     private final UpdateMovieUseCase updateMovie;
-    private final RatingRepository ratingRepository;
+    private final DeleteMovieUseCase deleteMovie;
+    private final AddMovieRatingUseCase addMovieRating;
     private final LineRatingRepository lineItemRepository;
     private final CategoryRepository categoryRepository;
     private final DirectorRepository directorRepository;
@@ -50,7 +50,8 @@ public class MovieServiceImpl implements MovieService {
                             GetAllMoviesUseCase getAllMovies,
                             GetMovieByIdUseCase getMovieById,
                             UpdateMovieUseCase updateMovie,
-                            RatingRepository ratingRepository,
+                            DeleteMovieUseCase deleteMovie,
+                            AddMovieRatingUseCase addMovieRating,
                             LineRatingRepository lineItemRepository,
                             CategoryRepository categoryRepository,
                             DirectorRepository directorRepository,
@@ -63,7 +64,8 @@ public class MovieServiceImpl implements MovieService {
         this.getAllMovies = getAllMovies;
         this.getMovieById = getMovieById;
         this.updateMovie = updateMovie;
-        this.ratingRepository = ratingRepository;
+        this.deleteMovie = deleteMovie;
+        this.addMovieRating = addMovieRating;
         this.lineItemRepository = lineItemRepository;
         this.categoryRepository = categoryRepository;
         this.directorRepository = directorRepository;
@@ -96,44 +98,13 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void delete(Long id) {
-        getMovie(id);
-        repository.deleteById(id);
+        deleteMovie.delete(id);
     }
 
     @Override
     public ApiMessageResponseDto addMovieRating(Long id,
                                                 MovieRatingDto movieRatingDto) {
-        Long userId = securityContextService.getCurrentLoggedUser().getId();
-        Movie movie = getMovie(id);
-        Rating movieRating = movie.getRatings();
-
-        if (lineItemRepository.existsByUserIdAndRating_Id(userId,
-                movieRating.getId())) {
-            throw new BadRequestException("Você já avaliou o filme: " + movie.getName());
-        }
-
-        LineRating newLineRating = new LineRating(movieRatingDto.getRating(),
-                userId,
-                movieRating);
-        lineItemRepository.save(newLineRating);
-
-
-        movieRating.setRatingsAmount(movieRating.getRatingsAmount() + ONE);
-
-        List<LineRating> lineRatingList = lineItemRepository.findAllByRating_Id(movieRating.getId());
-
-        if (hasMoreThanOneRating(movieRating.getRatingsAmount())) {
-            Double avgRating = calcRating(lineRatingList);
-
-            movieRating.setRating(avgRating);
-            movieRating.setRatingsAmount(lineRatingList.size());
-        } else {
-            movieRating.setRating(movieRatingDto.getRating());
-        }
-
-        ratingRepository.save(movieRating);
-
-        return new ApiMessageResponseDto("Filme avaliado com sucesso");
+        return addMovieRating.addMovieRating(id, movieRatingDto);
     }
 
     @Override
@@ -337,7 +308,7 @@ public class MovieServiceImpl implements MovieService {
 
         return bestRatedDtos;
     }
-    
+
     private Boolean hasMoreThanOneRating(Integer ratingsAmount) {
         return ratingsAmount > 0;
     }
