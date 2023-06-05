@@ -1,37 +1,20 @@
 package com.jpcchaves.softreaming.services.impl.movie;
 
-import com.jpcchaves.softreaming.entities.*;
-import com.jpcchaves.softreaming.exceptions.BadRequestException;
-import com.jpcchaves.softreaming.exceptions.ResourceNotFoundException;
 import com.jpcchaves.softreaming.payload.dtos.ApiMessageResponseDto;
 import com.jpcchaves.softreaming.payload.dtos.actor.ActorsIdsDto;
 import com.jpcchaves.softreaming.payload.dtos.directors.DirectorsIdsDtos;
 import com.jpcchaves.softreaming.payload.dtos.movie.*;
 import com.jpcchaves.softreaming.payload.dtos.rating.RatingDto;
-import com.jpcchaves.softreaming.repositories.ActorRepository;
-import com.jpcchaves.softreaming.repositories.CategoryRepository;
-import com.jpcchaves.softreaming.repositories.DirectorRepository;
-import com.jpcchaves.softreaming.repositories.MovieRepository;
 import com.jpcchaves.softreaming.services.usecases.movie.*;
-import com.jpcchaves.softreaming.utils.mapper.MapperUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class MovieServiceImpl implements MovieService {
-
-    private static final int TWO = 2;
-
-    private final MovieRepository repository;
     private final FilterMovieUseCase filterMovie;
     private final CreateMovieUseCase createMovie;
     private final GetAllMoviesUseCase getAllMovies;
@@ -40,13 +23,20 @@ public class MovieServiceImpl implements MovieService {
     private final DeleteMovieUseCase deleteMovie;
     private final AddMovieRatingUseCase addMovieRating;
     private final UpdateMovieRatingUseCase updateMovieRating;
-    private final CategoryRepository categoryRepository;
-    private final DirectorRepository directorRepository;
-    private final ActorRepository actorRepository;
-    private final MapperUtils mapper;
+    private final GetMovieRatingUseCase getMovieRating;
+    private final SortByBestRatingUseCase sortByBestRating;
+    private final FilterMovieByReleaseDateBetweenUseCase filterMovieByReleaseDateBetween;
+    private final AddMovieCategoryUseCase addMovieCategory;
+    private final RemoveMovieCategoryUseCase removeMovieCategory;
+    private final AddMovieDirectorUseCase addMovieDirector;
+    private final RemoveMovieDirectorUseCase removeMovieDirector;
+    private final AddMovieActorUseCase addMovieActor;
+    private final RemoveMovieActorUseCase removeMovieActor;
+    private final FilterMovieByRatingGreaterThanUseCase filterMovieByRatingGreaterThan;
+    private final FindAllMoviesByCategoryUseCase findAllMoviesByCategory;
+    private final FindAllMoviesByActorUseCase findAllMoviesByActor;
 
-    public MovieServiceImpl(MovieRepository repository,
-                            FilterMovieUseCase filterMovie,
+    public MovieServiceImpl(FilterMovieUseCase filterMovie,
                             CreateMovieUseCase createMovie,
                             GetAllMoviesUseCase getAllMovies,
                             GetMovieByIdUseCase getMovieById,
@@ -54,11 +44,18 @@ public class MovieServiceImpl implements MovieService {
                             DeleteMovieUseCase deleteMovie,
                             AddMovieRatingUseCase addMovieRating,
                             UpdateMovieRatingUseCase updateMovieRating,
-                            CategoryRepository categoryRepository,
-                            DirectorRepository directorRepository,
-                            ActorRepository actorRepository,
-                            MapperUtils mapper) {
-        this.repository = repository;
+                            GetMovieRatingUseCase getMovieRating,
+                            SortByBestRatingUseCase sortByBestRating,
+                            FilterMovieByReleaseDateBetweenUseCase filterMovieByReleaseDateBetween,
+                            AddMovieCategoryUseCase addMovieCategory,
+                            RemoveMovieCategoryUseCase removeMovieCategory,
+                            AddMovieDirectorUseCase addMovieDirector,
+                            RemoveMovieDirectorUseCase removeMovieDirector,
+                            AddMovieActorUseCase addMovieActor,
+                            RemoveMovieActorUseCase removeMovieActor,
+                            FilterMovieByRatingGreaterThanUseCase filterMovieByRatingGreaterThan,
+                            FindAllMoviesByCategoryUseCase findAllMoviesByCategory,
+                            FindAllMoviesByActorUseCase findAllMoviesByActor) {
         this.filterMovie = filterMovie;
         this.createMovie = createMovie;
         this.getAllMovies = getAllMovies;
@@ -67,10 +64,18 @@ public class MovieServiceImpl implements MovieService {
         this.deleteMovie = deleteMovie;
         this.addMovieRating = addMovieRating;
         this.updateMovieRating = updateMovieRating;
-        this.categoryRepository = categoryRepository;
-        this.directorRepository = directorRepository;
-        this.actorRepository = actorRepository;
-        this.mapper = mapper;
+        this.getMovieRating = getMovieRating;
+        this.sortByBestRating = sortByBestRating;
+        this.filterMovieByReleaseDateBetween = filterMovieByReleaseDateBetween;
+        this.addMovieCategory = addMovieCategory;
+        this.removeMovieCategory = removeMovieCategory;
+        this.addMovieDirector = addMovieDirector;
+        this.removeMovieDirector = removeMovieDirector;
+        this.addMovieActor = addMovieActor;
+        this.removeMovieActor = removeMovieActor;
+        this.filterMovieByRatingGreaterThan = filterMovieByRatingGreaterThan;
+        this.findAllMoviesByCategory = findAllMoviesByCategory;
+        this.findAllMoviesByActor = findAllMoviesByActor;
     }
 
     @Override
@@ -115,11 +120,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public RatingDto getMovieRating(Long movieId) {
-        Movie movie = getMovie(movieId);
-        Rating movieRating = movie.getRatings();
-
-        return mapper.parseObject(movieRating,
-                RatingDto.class);
+        return getMovieRating.getMovieRating(movieId);
     }
 
     @Override
@@ -132,205 +133,68 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieByBestRatedDto> sortByBestRating() {
-        List<Movie> movieList = repository.findTop10ByOrderByRatings_RatingDesc();
-
-        return buildMovieListResponse(movieList);
+        return sortByBestRating.sortByBestRating();
     }
 
     @Override
     public MovieResponsePaginatedDto<?> filterByReleaseDateBetween(String startDate,
                                                                    String endDate,
                                                                    Pageable pageable) {
-        Page<Movie> moviePage = repository.findByReleaseDateBetween(startDate, endDate, pageable);
-        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(moviePage.getContent());
-
-        return buildMovieResponsePaginatedDto(movieByBestRatedDto, moviePage);
+        return filterMovieByReleaseDateBetween.filterByReleaseDateBetween(startDate, endDate, pageable);
     }
 
     @Override
     public ApiMessageResponseDto addCategory(Long id,
                                              CategoryRequestDto categoryRequestDto) {
-        Movie movie = getMovie(id);
-        List<Category> categories = categoryRepository.findAllById(categoryRequestDto.getCategoryIds());
-
-        movie.getCategories().addAll(categories);
-
-        repository.save(movie);
-        return new ApiMessageResponseDto("Categoria(s) adicionada(s) com sucesso");
+        return addMovieCategory.addCategory(id, categoryRequestDto);
     }
 
     @Override
     public ApiMessageResponseDto removeCategory(Long id,
                                                 CategoryRequestDto categoryRequestDto) {
-        Movie movie = getMovie(id);
-        List<Category> categories = categoryRepository.findAllById(categoryRequestDto.getCategoryIds());
 
-        categories.forEach(movie.getCategories()::remove);
-
-        repository.save(movie);
-        return new ApiMessageResponseDto("Categoria(s) removida(s) com sucesso");
+        return removeMovieCategory.removeCategory(id, categoryRequestDto);
     }
 
     @Override
     public ApiMessageResponseDto addDirector(Long id,
                                              DirectorsIdsDtos directorsIdsDtos) {
-        Movie movie = getMovie(id);
-
-        List<Director> directors = directorRepository.findAllById(directorsIdsDtos.getDirectorsIds());
-
-        for (Director director : directors) {
-            movie.getDirectors().add(director);
-        }
-
-        repository.save(movie);
-
-        return new ApiMessageResponseDto("Diretor(es) adicionado(s) com sucesso");
+        return addMovieDirector.addDirector(id, directorsIdsDtos);
     }
 
     @Override
     public ApiMessageResponseDto removeDirector(Long id,
                                                 DirectorsIdsDtos directorsIdsDtos) {
-        Movie movie = getMovie(id);
-
-        for (Long directorId : directorsIdsDtos.getDirectorsIds()) {
-            movie.getDirectors().removeIf(director -> Objects.equals(director.getId(), directorId));
-        }
-
-        repository.save(movie);
-
-        return new ApiMessageResponseDto("Diretor(es) removido(s) com sucesso");
+        return removeMovieDirector.removeDirector(id, directorsIdsDtos);
     }
 
     @Override
     public ApiMessageResponseDto addActor(Long id,
                                           ActorsIdsDto actorsIds) {
-        Movie movie = getMovie(id);
-
-        List<Actor> actors = actorRepository.findAllById(actorsIds.getActorsIds());
-
-        for (Actor actor : actors) {
-            movie.getActors().add(actor);
-        }
-
-        repository.save(movie);
-
-        return new ApiMessageResponseDto("Ator(es) adicionado(s) com sucesso");
+        return addMovieActor.addActor(id, actorsIds);
     }
 
     @Override
     public ApiMessageResponseDto removeActor(Long id,
                                              ActorsIdsDto actorsIds) {
-        Movie movie = getMovie(id);
-
-        for (Long actorId : actorsIds.getActorsIds()) {
-            movie.getActors().removeIf(actor -> Objects.equals(actor.getId(), actorId));
-        }
-
-        repository.save(movie);
-
-        return new ApiMessageResponseDto("Ator(es) removido(s) com sucesso");
+        return removeMovieActor.removeActor(id, actorsIds);
     }
 
     @Override
     public MovieResponsePaginatedDto<?> filterByRatingGreaterThan(Pageable pageable,
                                                                   Double rating) {
-        Page<Movie> movies = repository.findByRatings_RatingGreaterThanEqual(pageable, rating);
-        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(movies.getContent());
-
-        return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
+        return filterMovieByRatingGreaterThan.filterByRatingGreaterThan(pageable, rating);
     }
 
     @Override
     public MovieResponsePaginatedDto<?> findAllMoviesByCategory(Pageable pageable,
                                                                 Long categoryId) {
-        Category category = categoryRepository
-                .findById(categoryId)
-                .orElseThrow(() -> new BadRequestException("Categoria não encontrada com o ID informado: " + categoryId));
-
-        Page<Movie> movies = repository.findAllByCategories(pageable, category);
-        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(movies.getContent());
-
-        return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
+        return findAllMoviesByCategory.findAllMoviesByCategory(pageable, categoryId);
     }
 
     @Override
     public MovieResponsePaginatedDto<?> findAllMoviesByActor(Pageable pageable,
                                                              Long actorId) {
-        Actor actor = actorRepository
-                .findById(actorId)
-                .orElseThrow(() -> new BadRequestException("Categoria não encontrada com o ID informado: " + actorId));
-
-        Page<Movie> movies = repository.findAllByActors(pageable, actor);
-        List<MovieByBestRatedDto> movieByBestRatedDto = buildMovieListResponse(movies.getContent());
-
-        return buildMovieResponsePaginatedDto(movieByBestRatedDto, movies);
+        return findAllMoviesByActor.findAllMoviesByActor(pageable, actorId);
     }
-
-    private List<MovieByBestRatedDto> buildMovieListResponse(List<Movie> movieList) {
-        List<MovieByBestRatedDto> bestRatedDtos = new ArrayList<>();
-
-        for (Movie movie : movieList) {
-            bestRatedDtos.add(new MovieByBestRatedDto(mapper.parseObject(movie, MovieResponseMinDto.class),
-                    movie.getRatings().getRating(),
-                    movie.getRatings().getRatingsAmount())
-            );
-        }
-
-        return bestRatedDtos;
-    }
-
-    private Boolean hasMoreThanOneRating(Integer ratingsAmount) {
-        return ratingsAmount > 0;
-    }
-
-    private Double formatRating(Double rating) {
-        BigDecimal bd = new BigDecimal(rating).setScale(TWO,
-                RoundingMode.HALF_EVEN);
-        return bd.doubleValue();
-    }
-
-    private Double calcRating(List<LineRating> lineRatingList) {
-        Double avgRating = 0.0;
-
-        for (LineRating lineRate : lineRatingList) {
-            avgRating += lineRate.getRate();
-        }
-
-        return formatRating(avgRating / lineRatingList.size());
-    }
-
-    private Movie updateMovie(Movie movie,
-                              MovieRequestDto requestDto) {
-        movie.setId(movie.getId());
-        movie.setCreatedAt(movie.getCreatedAt());
-        movie.setName(requestDto.getName());
-        movie.setShortDescription(requestDto.getShortDescription());
-        movie.setLongDescription(requestDto.getLongDescription());
-        movie.setDuration(requestDto.getDuration());
-        movie.setMovieUrl(requestDto.getMovieUrl());
-        movie.setPosterUrl(requestDto.getPosterUrl());
-
-        return movie;
-    }
-
-    private Movie getMovie(Long id) {
-        return repository
-                .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado um filme com o ID  informado"));
-    }
-
-    private <T> MovieResponsePaginatedDto<?> buildMovieResponsePaginatedDto(List<T> moviesResponse,
-                                                                            Page<Movie> moviePage) {
-        MovieResponsePaginatedDto<T> moviePaginated = new MovieResponsePaginatedDto<>();
-
-        moviePaginated.setContent(moviesResponse);
-        moviePaginated.setPageNo(moviePage.getNumber());
-        moviePaginated.setPageSize(moviePage.getSize());
-        moviePaginated.setTotalElements(moviePage.getTotalElements());
-        moviePaginated.setTotalPages(moviePage.getTotalPages());
-        moviePaginated.setLast(moviePage.isLast());
-
-        return moviePaginated;
-    }
-
 }
