@@ -39,13 +39,18 @@ public class CreateMovieImpl implements CreateMovieUseCase {
         this.directorRepository = directorRepository;
         this.mapper = mapper;
     }
+    
+    private void verifyNameAvailability(String movieName) {
+    	if (repository.existsByName(movieName)) {
+            throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + movieName);
+        }
+    }
 
     @Override
     public ApiMessageResponseDto create(MovieRequestDto requestDto) {
-        if (repository.existsByName(requestDto.getName())) {
-            throw new BadRequestException("Já existe um filme cadastrado com o nome informado: " + requestDto.getName());
-        }
-
+        
+    	verifyNameAvailability(requestDto.getName());
+    	
         try {
             List<Category> categories = categoryRepository
                     .findAllById(requestDto.getCategoriesIds());
